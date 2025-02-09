@@ -665,4 +665,6 @@ for any images or videos, these will also be included in the json as a url to s3
 
 For the trophy 3d models, use a placeholder for now, and we will come back to implement this later.
 
+make sure the whole thing is a fully functional demo with all data filled in (add data as needed) and all functionality in place.
+
 create the whole html file (index.html) and sample json file (data.json) (as needed)

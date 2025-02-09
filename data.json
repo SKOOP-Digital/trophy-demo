@@ -5,145 +5,143 @@
       "name": "Saginaw High",
       "colors": {
         "primary": "#000080",
-        "secondary": "#FFD700",
-        "accent": "#000000"
+        "secondary": "#FFD700"
       },
       "logo": "placeholder_logo_url",
-      "backgroundVideo": "placeholder_video_url"
+      "backgroundVideo": "placeholder_video_url",
+      "sports": [
+        {
+          "id": "mens-basketball",
+          "name": "Men's Basketball",
+          "years": [
+            {
+              "year": 2023,
+              "achievement": "District Champions",
+              "trophyModel": "placeholder_3d_model_url",
+              "trophyImage": "placeholder_trophy_image",
+              "team": {
+                "photo": "placeholder_team_photo",
+                "roster": [
+                  {
+                    "id": "player1",
+                    "name": "John Smith",
+                    "number": "23",
+                    "position": "Guard",
+                    "photo": "placeholder_player_photo",
+                    "stats": {
+                      "pointsPerGame": 18.5,
+                      "assistsPerGame": 5.2,
+                      "rebounds": 4.1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "athletes": {
+        "d1": [
+          {
+            "name": "Michael Thompson",
+            "graduationYear": 2020,
+            "sport": "Basketball",
+            "college": "Michigan State",
+            "photo": "placeholder_photo"
+          }
+        ],
+        "pro": [
+          {
+            "name": "Draymond Green",
+            "graduationYear": 2008,
+            "sport": "Basketball",
+            "team": "Golden State Warriors",
+            "photo": "placeholder_photo"
+          }
+        ]
+      }
     },
     {
       "id": "arthur-hill",
       "name": "Arthur Hill",
       "colors": {
         "primary": "#000080",
-        "secondary": "#FFD700",
-        "accent": "#000000"
+        "secondary": "#FFD700"
       },
       "logo": "placeholder_logo_url",
-      "backgroundVideo": "placeholder_video_url"
+      "backgroundVideo": "placeholder_video_url",
+      "sports": [
+        {
+          "id": "womens-basketball",
+          "name": "Women's Basketball",
+          "years": [
+            {
+              "year": 2023,
+              "achievement": "State Champions",
+              "trophyModel": "placeholder_3d_model_url",
+              "trophyImage": "placeholder_trophy_image",
+              "team": {
+                "photo": "placeholder_team_photo",
+                "roster": [
+                  {
+                    "id": "player1",
+                    "name": "Sarah Johnson",
+                    "number": "11",
+                    "position": "Forward",
+                    "photo": "placeholder_player_photo",
+                    "stats": {
+                      "pointsPerGame": 22.3,
+                      "assistsPerGame": 3.8,
+                      "rebounds": 8.2
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "saginaw-united",
       "name": "Saginaw United",
       "colors": {
         "primary": "#000080",
-        "secondary": "#FFD700",
-        "accent": "#000000"
+        "secondary": "#FFD700"
       },
       "logo": "placeholder_logo_url",
-      "backgroundVideo": "placeholder_video_url"
-    }
-  ],
-  "sports": [
-    {
-      "id": "mens-basketball",
-      "name": "Men's Basketball",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "womens-basketball",
-      "name": "Women's Basketball",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "football",
-      "name": "Football",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "baseball",
-      "name": "Baseball",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "womens-softball",
-      "name": "Women's Softball",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "wrestling",
-      "name": "Wrestling",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "lacrosse",
-      "name": "Lacrosse",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "womens-track",
-      "name": "Women's Track & Field",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    },
-    {
-      "id": "mens-track",
-      "name": "Men's Track & Field",
-      "icon": "placeholder_icon_url",
-      "backgroundImage": "placeholder_background_url"
-    }
-  ],
-  "achievements": {
-    "saginaw-high": {
-      "mens-basketball": {
-        "2023": {
-          "level": "district",
-          "trophy": {
-            "model3d": "placeholder_3d_model_url",
-            "image": "placeholder_trophy_image"
-          },
-          "team": {
-            "photo": "placeholder_team_photo",
-            "roster": [
-              {
-                "id": "player1",
-                "name": "John Doe",
-                "number": "23",
-                "position": "Guard",
-                "photo": "placeholder_player_photo",
-                "stats": {
-                  "points": 15.5,
-                  "assists": 5.2,
-                  "rebounds": 3.1
-                }
+      "backgroundVideo": "placeholder_video_url",
+      "sports": [
+        {
+          "id": "football",
+          "name": "Football",
+          "years": [
+            {
+              "year": 2023,
+              "achievement": "Regional Champions",
+              "trophyModel": "placeholder_3d_model_url",
+              "trophyImage": "placeholder_trophy_image",
+              "team": {
+                "photo": "placeholder_team_photo",
+                "roster": [
+                  {
+                    "id": "player1",
+                    "name": "Marcus Williams",
+                    "number": "7",
+                    "position": "Quarterback",
+                    "photo": "placeholder_player_photo",
+                    "stats": {
+                      "passingYards": 2800,
+                      "touchdowns": 32,
+                      "interceptions": 8
+                    }
+                  }
+                ]
               }
-            ]
-          }
+            }
+          ]
         }
-      }
+      ]
     }
-  },
-  "athletes": {
-    "d1": [
-      {
-        "id": "athlete1",
-        "name": "Jane Smith",
-        "school": "saginaw-high",
-        "graduationYear": 2020,
-        "sport": "womens-basketball",
-        "college": "Michigan State",
-        "photo": "placeholder_athlete_photo",
-        "achievements": ["All-State 2020", "Conference MVP 2019"]
-      }
-    ],
-    "pro": [
-      {
-        "id": "athlete2",
-        "name": "Mike Johnson",
-        "school": "arthur-hill",
-        "graduationYear": 2015,
-        "sport": "football",
-        "team": "Detroit Lions",
-        "photo": "placeholder_athlete_photo",
-        "achievements": ["NFL Pro Bowl 2022"]
-      }
-    ]
-  }
+  ]
 }
