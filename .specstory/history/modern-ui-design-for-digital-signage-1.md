@@ -2685,7 +2685,75 @@ Would you like me to:
 
 _**User**_
 
+Error loading model: RangeError: Invalid typed array length: 72
+    at new Float32Array (<anonymous>)
+    at GLTFLoader.js:2201:15
+    at async Promise.all (trophy-demo/index 1)
+    at async Promise.all (trophy-demo/index 0)
+    at async Promise.all (trophy-demo/index 1)
+    at async Promise.all (trophy-demo/index 0)
+    at async Promise.all (trophy-demo/index 1)
+    at async Promise.all (trophy-demo/index 0)
+    at async Promise.all (trophy-demo/index 0)
+    at async Promise.all (trophy-demo/index 0)
+(anonymous) @ trophy-demo/:601
+_onError @ GLTFLoader.js:73
+Promise.catch
+parse @ GLTFLoader.js:1823
+parse @ GLTFLoader.js:275
+(anonymous) @ GLTFLoader.js:95
+(anonymous) @ three.min.js:6
+XMLHttpRequest.send
+load @ three.min.js:6
+load @ GLTFLoader.js:91
+loadModel @ trophy-demo/:554
+(anonymous) @ trophy-demo/:658
+setTimeout
+showTeamDetail @ trophy-demo/:655
+(anonymous) @ trophy-demo/:422
+trophy-demo/:490  Trophy Viewer Error: Failed to load trophy model URL: ./trophy.gltf
+Status: unknown
+Type: unknown
+
+---
+
+
 it loads now, and is actually working fine, but its giving an error still, and even though it seemd to be working
+
+---
+
+_**Assistant**_
+
+
+
+```thinking
+Looking at the error, it seems there's an issue with the GLTF buffer data. The error "Invalid typed array length: 72" suggests there's a mismatch between the declared buffer size and the actual data. 
+
+The issues are:
+1. The buffer data in the GLTF file isn't properly formatted
+2. The length declarations in the bufferViews might be incorrect
+3. The base64 data might be corrupted or incomplete
+
+Let's fix the GLTF file by:
+1. Properly structuring the buffer data
+2. Using correct buffer sizes
+3. Ensuring proper base64 encoding
+4. Adding proper vertex data
+```
+
+Let me create a corrected version of the trophy.gltf file:
+
+---
+
+_****_
+
+
+
+---
+
+_****_
+
+
 
 ---
 
