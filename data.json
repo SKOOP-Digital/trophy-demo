@@ -148,6 +148,33 @@
         "lastUpdated": "2024-02-20",
         "version": "1.0.0",
         "supportedMediaTypes": ["jpg", "mp4", "glb"],
-        "maxFileSize": "50MB"
+        "maxFileSize": "50MB",
+        "ui": {
+            "theme": {
+                "colors": {
+                    "primary": "#000000",
+                    "secondary": "#FFDB58",
+                    "accent": "#14213D",
+                    "background": "#121212",
+                    "surface": "#1E1E1E",
+                    "text": {
+                        "primary": "#FFFFFF",
+                        "secondary": "#CCCCCC"
+                    }
+                },
+                "fonts": {
+                    "heading": "'Montserrat', sans-serif",
+                    "body": "'Open Sans', sans-serif"
+                },
+                "spacing": {
+                    "header": "60px",
+                    "footer": "40px"
+                }
+            },
+            "transitions": {
+                "default": "0.3s ease-in-out",
+                "page": "0.5s ease-in-out"
+            }
+        }
     }
 }

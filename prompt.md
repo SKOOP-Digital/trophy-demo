@@ -69,18 +69,18 @@ Trophies photos will be 3d and we will want them spinning on screen. We will nee
 ---
 
 
-please create an html file (index.html) and json file (data.json) of the data which can be expanded as time goes on. 
+please create an html file (index.html) and update the json file (data.json) if needed of the data which can be expanded as time goes on. 
 
 You can use any modern html, css, or js that you'd like.  
 
 this should be responsive to the screen, and any headers or footers should be fixed to the top or bottom of the screen.
 
 make sure to stick to a consistent modern style
-
+incorporate the schools colors like navy, gold, black.
 make it fairly complesx and interesting.
 
 for any images or videos, these will also be included in the json as a url to s3, but just use a placeholder text for now.
 
 For the trophy 3d models, use a placeholder for now, and we will come back to implement this later.
 
-create the whole html file (index.html) and a sample json file (data.json).
+create the whole html file (index.html) and update the sample json file (data.json) if needed.
