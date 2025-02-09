@@ -10,80 +10,67 @@
         // Create a scene
         const scene = new THREE.Scene();
 
-        // Create more detailed trophy parts with smoother transitions
-        const baseGeometry = new THREE.CylinderBufferGeometry(0.8, 1, 0.2, 64);
-        const baseTopGeometry = new THREE.CylinderBufferGeometry(0.4, 0.8, 0.1, 64);
-        const stemGeometry = new THREE.CylinderBufferGeometry(0.2, 0.2, 2, 32);
-        const stemDetailGeometry = new THREE.TorusBufferGeometry(0.3, 0.05, 16, 64);
-        const bowlBaseGeometry = new THREE.CylinderBufferGeometry(0.4, 0.3, 0.2, 64);
-        const bowlGeometry = new THREE.LatheBufferGeometry([
-            new THREE.Vector2(0, 0),
-            new THREE.Vector2(0.3, 0.1),
-            new THREE.Vector2(0.6, 0.2),
-            new THREE.Vector2(0.8, 0.4),
-            new THREE.Vector2(1.0, 0.7),
-            new THREE.Vector2(0.9, 0.9),
-            new THREE.Vector2(0.7, 1.0),
-        ], 64);
+        // Create trophy parts with more complex geometry
+        const baseGeometry = new THREE.CylinderBufferGeometry(1.2, 1.4, 0.3, 64, 4, true);
+        const baseTopGeometry = new THREE.CylinderBufferGeometry(1.1, 1.2, 0.1, 64);
+        const stemBaseGeometry = new THREE.CylinderBufferGeometry(0.4, 0.6, 0.2, 32);
+        const stemGeometry = new THREE.CylinderBufferGeometry(0.25, 0.25, 2.2, 32, 4, true);
+        const stemDetailGeometry = new THREE.TorusBufferGeometry(0.3, 0.08, 16, 32);
+        const bowlBaseGeometry = new THREE.CylinderBufferGeometry(0.4, 0.3, 0.3, 32);
+        const bowlGeometry = new THREE.CylinderBufferGeometry(1.2, 0.4, 1.2, 64, 4, true);
+        const bowlRimGeometry = new THREE.TorusBufferGeometry(1.2, 0.1, 16, 64);
 
-        // Create realistic gold material
+        // Create materials with more realistic properties
         const goldMaterial = new THREE.MeshStandardMaterial({
             color: 0xffd700,
             metalness: 0.9,
-            roughness: 0.1,
+            roughness: 0.2,
             envMapIntensity: 1.0
         });
 
-        // Add environment map for realistic reflections
-        const envTexture = new THREE.CubeTextureLoader().load([
-            'https://threejs.org/examples/textures/cube/Park2/posx.jpg',
-            'https://threejs.org/examples/textures/cube/Park2/negx.jpg',
-            'https://threejs.org/examples/textures/cube/Park2/posy.jpg',
-            'https://threejs.org/examples/textures/cube/Park2/negy.jpg',
-            'https://threejs.org/examples/textures/cube/Park2/posz.jpg',
-            'https://threejs.org/examples/textures/cube/Park2/negz.jpg'
-        ]);
-        scene.environment = envTexture;
+        const darkGoldMaterial = new THREE.MeshStandardMaterial({
+            color: 0xccaa00,
+            metalness: 0.9,
+            roughness: 0.3,
+            envMapIntensity: 0.8
+        });
 
-        // Create trophy parts with smooth edges
+        // Create mesh parts
         const base = new THREE.Mesh(baseGeometry, goldMaterial);
         const baseTop = new THREE.Mesh(baseTopGeometry, goldMaterial);
+        const stemBase = new THREE.Mesh(stemBaseGeometry, darkGoldMaterial);
         const stem = new THREE.Mesh(stemGeometry, goldMaterial);
-        const stemDetailBottom = new THREE.Mesh(stemDetailGeometry, goldMaterial);
-        const stemDetailTop = new THREE.Mesh(stemDetailGeometry, goldMaterial);
-        const bowlBase = new THREE.Mesh(bowlBaseGeometry, goldMaterial);
+        const stemDetailBottom = new THREE.Mesh(stemDetailGeometry, darkGoldMaterial);
+        const stemDetailTop = new THREE.Mesh(stemDetailGeometry, darkGoldMaterial);
+        const bowlBase = new THREE.Mesh(bowlBaseGeometry, darkGoldMaterial);
         const bowl = new THREE.Mesh(bowlGeometry, goldMaterial);
+        const bowlRim = new THREE.Mesh(bowlRimGeometry, darkGoldMaterial);
 
         // Position parts
-        base.position.y = -1.6;
-        baseTop.position.y = -1.45;
-        stem.position.y = -0.5;
-        stemDetailBottom.position.y = -1.3;
-        stemDetailTop.position.y = 0.3;
-        bowlBase.position.y = 0.5;
-        bowl.position.y = 1.2;
-
-        // Add decorative rings
-        const ringGeometry = new THREE.TorusBufferGeometry(0.25, 0.03, 16, 64);
-        const rings = [];
-        for (let i = 0; i < 3; i++) {
-            const ring = new THREE.Mesh(ringGeometry, goldMaterial);
-            ring.position.y = -0.8 + (i * 0.4);
-            rings.push(ring);
-        }
+        base.position.y = -1.8;
+        baseTop.position.y = -1.6;
+        stemBase.position.y = -1.4;
+        stem.position.y = -0.2;
+        stemDetailBottom.position.y = -1.2;
+        stemDetailBottom.rotation.x = Math.PI / 2;
+        stemDetailTop.position.y = 0.8;
+        stemDetailTop.rotation.x = Math.PI / 2;
+        bowlBase.position.y = 1.0;
+        bowl.position.y = 1.8;
+        bowlRim.position.y = 2.4;
+        bowlRim.rotation.x = Math.PI / 2;
 
         // Create trophy group
         const trophyGroup = new THREE.Group();
         trophyGroup.add(base);
         trophyGroup.add(baseTop);
+        trophyGroup.add(stemBase);
         trophyGroup.add(stem);
         trophyGroup.add(stemDetailBottom);
         trophyGroup.add(stemDetailTop);
         trophyGroup.add(bowlBase);
         trophyGroup.add(bowl);
-        rings.forEach(ring => trophyGroup.add(ring));
-
-        scene.add(trophyGroup);
+        trophyGroup.add(bowlRim);
 
         // Add lights for baking
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -93,13 +80,15 @@
         mainLight.position.set(5, 5, 5);
         scene.add(mainLight);
 
-        const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
         fillLight.position.set(-5, 0, -5);
         scene.add(fillLight);
 
-        const backLight = new THREE.DirectionalLight(0xffffff, 0.3);
-        backLight.position.set(0, -5, -5);
-        scene.add(backLight);
+        const topLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        topLight.position.set(0, 10, 0);
+        scene.add(topLight);
+
+        scene.add(trophyGroup);
 
         // Export the scene
         const exporter = new THREE.GLTFExporter();
@@ -116,7 +105,7 @@
             URL.revokeObjectURL(url);
         }, {
             binary: false,
-            includeCustomExtensions: false,
+            includeCustomExtensions: true,
             embedImages: true
         });
     </script>
