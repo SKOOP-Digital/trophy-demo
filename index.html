@@ -433,7 +433,6 @@
             constructor(containerId) {
                 this.container = document.getElementById(containerId);
                 this.setupLoadingState();
-                this.modelLoaded = false;
                 
                 // Check WebGL support
                 try {
@@ -488,14 +487,7 @@
             }
 
             showError(message, details = '') {
-                // Only log to console for non-critical errors
                 console.error('Trophy Viewer Error:', message, details);
-                
-                // Don't show error UI if model loaded successfully
-                if (this.modelLoaded) {
-                    return;
-                }
-
                 const errorElement = document.createElement('div');
                 errorElement.className = 'trophy-error';
                 errorElement.innerHTML = `
@@ -505,12 +497,10 @@
                     ${details ? `<small style="color: #666; margin-top: 10px; display: block;">${details}</small>` : ''}
                 `;
                 this.container.appendChild(errorElement);
-                this.lastErrorElement = errorElement;
+                this.lastErrorElement = errorElement; // Track the error element
 
-                // Only create fallback if model truly failed to load
-                if (!this.modelLoaded) {
-                    this.createFallbackTrophy();
-                }
+                // Create a simple fallback trophy using Three.js geometry
+                this.createFallbackTrophy();
             }
 
             createFallbackTrophy() {
@@ -556,7 +546,6 @@
 
             loadModel(url) {
                 this.loadingElement.style.display = 'block';
-                this.modelLoaded = false;
                 
                 // Remove any existing error messages
                 const existingErrors = this.container.querySelectorAll('.trophy-error');
@@ -567,7 +556,6 @@
                     url,
                     (gltf) => {
                         this.loadingElement.style.display = 'none';
-                        this.modelLoaded = true;
                         
                         // Remove error message if model loaded successfully
                         if (this.lastErrorElement) {
