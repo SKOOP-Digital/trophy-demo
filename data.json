@@ -1,147 +1,140 @@
 {
-  "schools": [
-    {
-      "id": "saginaw-high",
-      "name": "Saginaw High",
-      "colors": {
-        "primary": "#000080",
-        "secondary": "#FFD700"
-      },
-      "logo": "placeholder_logo_url",
-      "backgroundVideo": "placeholder_video_url",
-      "sports": [
+    "schools": [
         {
-          "id": "mens-basketball",
-          "name": "Men's Basketball",
-          "years": [
-            {
-              "year": 2023,
-              "achievement": "District Champions",
-              "trophyModel": "placeholder_3d_model_url",
-              "trophyImage": "placeholder_trophy_image",
-              "team": {
-                "photo": "placeholder_team_photo",
-                "roster": [
-                  {
-                    "id": "player1",
-                    "name": "John Smith",
-                    "number": "23",
-                    "position": "Guard",
-                    "photo": "placeholder_player_photo",
-                    "stats": {
-                      "pointsPerGame": 18.5,
-                      "assistsPerGame": 5.2,
-                      "rebounds": 4.1
+            "id": "saginaw-high",
+            "name": "Saginaw High",
+            "colors": {
+                "primary": "#000080",
+                "secondary": "#FFD700",
+                "accent": "#000000"
+            },
+            "backgroundVideo": "placeholder_url",
+            "sports": {
+                "mensBasketball": {
+                    "name": "Men's Basketball",
+                    "years": {
+                        "2023": {
+                            "achievement": "District Champions",
+                            "teamPhoto": "placeholder_url",
+                            "trophyModel": "placeholder_url",
+                            "roster": [
+                                {
+                                    "name": "John Smith",
+                                    "number": "23",
+                                    "position": "Guard",
+                                    "photo": "placeholder_url",
+                                    "stats": {
+                                        "pointsPerGame": 18.5,
+                                        "assists": 5.2,
+                                        "rebounds": 4.1
+                                    }
+                                }
+                            ]
+                        }
                     }
-                  }
+                }
+            },
+            "athletes": {
+                "d1": [
+                    {
+                        "name": "Michael Thompson",
+                        "graduationYear": 2020,
+                        "sport": "Basketball",
+                        "college": "Michigan State",
+                        "photo": "placeholder_url"
+                    }
+                ],
+                "pro": [
+                    {
+                        "name": "LaMarr Woodley",
+                        "graduationYear": 2003,
+                        "sport": "Football",
+                        "professional": "NFL - Pittsburgh Steelers",
+                        "photo": "placeholder_url"
+                    }
                 ]
-              }
             }
-          ]
-        }
-      ],
-      "athletes": {
-        "d1": [
-          {
-            "name": "Michael Thompson",
-            "graduationYear": 2020,
-            "sport": "Basketball",
-            "college": "Michigan State",
-            "photo": "placeholder_photo"
-          }
-        ],
-        "pro": [
-          {
-            "name": "Draymond Green",
-            "graduationYear": 2008,
-            "sport": "Basketball",
-            "team": "Golden State Warriors",
-            "photo": "placeholder_photo"
-          }
-        ]
-      }
-    },
-    {
-      "id": "arthur-hill",
-      "name": "Arthur Hill",
-      "colors": {
-        "primary": "#000080",
-        "secondary": "#FFD700"
-      },
-      "logo": "placeholder_logo_url",
-      "backgroundVideo": "placeholder_video_url",
-      "sports": [
+        },
         {
-          "id": "womens-basketball",
-          "name": "Women's Basketball",
-          "years": [
-            {
-              "year": 2023,
-              "achievement": "State Champions",
-              "trophyModel": "placeholder_3d_model_url",
-              "trophyImage": "placeholder_trophy_image",
-              "team": {
-                "photo": "placeholder_team_photo",
-                "roster": [
-                  {
-                    "id": "player1",
-                    "name": "Sarah Johnson",
-                    "number": "11",
-                    "position": "Forward",
-                    "photo": "placeholder_player_photo",
-                    "stats": {
-                      "pointsPerGame": 22.3,
-                      "assistsPerGame": 3.8,
-                      "rebounds": 8.2
+            "id": "arthur-hill",
+            "name": "Arthur Hill",
+            "colors": {
+                "primary": "#000080",
+                "secondary": "#FFD700",
+                "accent": "#000000"
+            },
+            "backgroundVideo": "placeholder_url",
+            "sports": {
+                "womensBasketball": {
+                    "name": "Women's Basketball",
+                    "years": {
+                        "2022": {
+                            "achievement": "District Champions",
+                            "teamPhoto": "placeholder_url",
+                            "trophyModel": "placeholder_url",
+                            "roster": [
+                                {
+                                    "name": "Sarah Johnson",
+                                    "number": "11",
+                                    "position": "Forward",
+                                    "photo": "placeholder_url",
+                                    "stats": {
+                                        "pointsPerGame": 15.8,
+                                        "assists": 3.2,
+                                        "rebounds": 8.4
+                                    }
+                                }
+                            ]
+                        }
                     }
-                  }
-                ]
-              }
+                }
             }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "saginaw-united",
-      "name": "Saginaw United",
-      "colors": {
-        "primary": "#000080",
-        "secondary": "#FFD700"
-      },
-      "logo": "placeholder_logo_url",
-      "backgroundVideo": "placeholder_video_url",
-      "sports": [
+        },
         {
-          "id": "football",
-          "name": "Football",
-          "years": [
-            {
-              "year": 2023,
-              "achievement": "Regional Champions",
-              "trophyModel": "placeholder_3d_model_url",
-              "trophyImage": "placeholder_trophy_image",
-              "team": {
-                "photo": "placeholder_team_photo",
-                "roster": [
-                  {
-                    "id": "player1",
-                    "name": "Marcus Williams",
-                    "number": "7",
-                    "position": "Quarterback",
-                    "photo": "placeholder_player_photo",
-                    "stats": {
-                      "passingYards": 2800,
-                      "touchdowns": 32,
-                      "interceptions": 8
+            "id": "saginaw-united",
+            "name": "Saginaw United",
+            "colors": {
+                "primary": "#000080",
+                "secondary": "#FFD700",
+                "accent": "#000000"
+            },
+            "backgroundVideo": "placeholder_url",
+            "sports": {
+                "football": {
+                    "name": "Football",
+                    "years": {
+                        "2023": {
+                            "achievement": "District Champions",
+                            "teamPhoto": "placeholder_url",
+                            "trophyModel": "placeholder_url",
+                            "roster": [
+                                {
+                                    "name": "Marcus Williams",
+                                    "number": "7",
+                                    "position": "Quarterback",
+                                    "photo": "placeholder_url",
+                                    "stats": {
+                                        "passingYards": 2500,
+                                        "touchdowns": 28,
+                                        "completionPercentage": 65.4
+                                    }
+                                }
+                            ]
+                        }
                     }
-                  }
-                ]
-              }
+                }
             }
-          ]
         }
-      ]
-    }
-  ]
+    ],
+    "sportCategories": [
+        "Men's Basketball",
+        "Women's Basketball",
+        "Football",
+        "Baseball",
+        "Women's Softball",
+        "Wrestling",
+        "Lacrosse",
+        "Women's Track & Field",
+        "Men's Track & Field"
+    ]
 }
