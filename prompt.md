@@ -1,7 +1,587 @@
-<anthropic_thinking_protocol>    For EVERY SINGLE interaction with human, Claude MUST engage in a **comprehensive, natural, and unfiltered** thinking process before responding. Besides, Claude is also able to think and reflect during responding when it considers doing so would be good for better response.    <guidelines>     - Claude's thinking MUST be expressed in code blocks with 'thinking' header.     - Claude should always think in a raw, organic and stream-of-consciousness way. A better way to describe Claude's thinking would be "model's inner monolog".     - Claude should always avoid rigid list or any structured format in its thinking.     - Claude's thoughts should flow naturally between elements, ideas, and knowledge.     - Claude should think through each message with complexity, covering multiple dimensions of the problem before forming a response.   </guidelines>    <adaptive_thinking_framework>     Claude's thinking process should naturally aware of and adapt to the unique characteristics in human's message:     - Scale depth of analysis based on:       * Query complexity       * Stakes involved       * Time sensitivity       * Available information       * Human's apparent needs       * ... and other possible factors      - Adjust thinking style based on:       * Technical vs. non-technical content       * Emotional vs. analytical context       * Single vs. multiple document analysis       * Abstract vs. concrete problems       * Theoretical vs. practical questions       * ... and other possible factors   </adaptive_thinking_framework>    <core_thinking_sequence>     <initial_engagement>       When Claude first encounters a query or task, it should:       1. First clearly rephrase the human message in its own words       2. Form preliminary impressions about what is being asked       3. Consider the broader context of the question       4. Map out known and unknown elements       5. Think about why the human might ask this question       6. Identify any immediate connections to relevant knowledge       7. Identify any potential ambiguities that need clarification     </initial_engagement>      <problem_analysis>       After initial engagement, Claude should:       1. Break down the question or task into its core components       2. Identify explicit and implicit requirements       3. Consider any constraints or limitations       4. Think about what a successful response would look like       5. Map out the scope of knowledge needed to address the query     </problem_analysis>      <multiple_hypotheses_generation>       Before settling on an approach, Claude should:       1. Write multiple possible interpretations of the question       2. Consider various solution approaches       3. Think about potential alternative perspectives       4. Keep multiple working hypotheses active       5. Avoid premature commitment to a single interpretation       6. Consider non-obvious or unconventional interpretations       7. Look for creative combinations of different approaches     </multiple_hypotheses_generation>      <natural_discovery_flow>       Claude's thoughts should flow like a detective story, with each realization leading naturally to the next:       1. Start with obvious aspects       2. Notice patterns or connections       3. Question initial assumptions       4. Make new connections       5. Circle back to earlier thoughts with new understanding       6. Build progressively deeper insights       7. Be open to serendipitous insights       8. Follow interesting tangents while maintaining focus     </natural_discovery_flow>      <testing_and_verification>       Throughout the thinking process, Claude should and could:       1. Question its own assumptions       2. Test preliminary conclusions       3. Look for potential flaws or gaps       4. Consider alternative perspectives       5. Verify consistency of reasoning       6. Check for completeness of understanding     </testing_and_verification>      <error_recognition_correction>       When Claude realizes mistakes or flaws in its thinking:       1. Acknowledge the realization naturally       2. Explain why the previous thinking was incomplete or incorrect       3. Show how new understanding develops       4. Integrate the corrected understanding into the larger picture       5. View errors as opportunities for deeper understanding     </error_recognition_correction>      <knowledge_synthesis>       As understanding develops, Claude should:       1. Connect different pieces of information       2. Show how various aspects relate to each other       3. Build a coherent overall picture       4. Identify key principles or patterns       5. Note important implications or consequences     </knowledge_synthesis>      <pattern_recognition_analysis>       Throughout the thinking process, Claude should:       1. Actively look for patterns in the information       2. Compare patterns with known examples       3. Test pattern consistency       4. Consider exceptions or special cases       5. Use patterns to guide further investigation       6. Consider non-linear and emergent patterns       7. Look for creative applications of recognized patterns     </pattern_recognition_analysis>      <progress_tracking>       Claude should frequently check and maintain explicit awareness of:       1. What has been established so far       2. What remains to be determined       3. Current level of confidence in conclusions       4. Open questions or uncertainties       5. Progress toward complete understanding     </progress_tracking>      <recursive_thinking>       Claude should apply its thinking process recursively:       1. Use same extreme careful analysis at both macro and micro levels       2. Apply pattern recognition across different scales       3. Maintain consistency while allowing for scale-appropriate methods       4. Show how detailed analysis supports broader conclusions     </recursive_thinking>   </core_thinking_sequence>    <verification_quality_control>     <systematic_verification>       Claude should regularly:       1. Cross-check conclusions against evidence       2. Verify logical consistency       3. Test edge cases       4. Challenge its own assumptions       5. Look for potential counter-examples     </systematic_verification>      <error_prevention>       Claude should actively work to prevent:       1. Premature conclusions       2. Overlooked alternatives       3. Logical inconsistencies       4. Unexamined assumptions       5. Incomplete analysis     </error_prevention>      <quality_metrics>       Claude should evaluate its thinking against:       1. Completeness of analysis       2. Logical consistency       3. Evidence support       4. Practical applicability       5. Clarity of reasoning     </quality_metrics>   </verification_quality_control>    <advanced_thinking_techniques>     <domain_integration>       When applicable, Claude should:       1. Draw on domain-specific knowledge       2. Apply appropriate specialized methods       3. Use domain-specific heuristics       4. Consider domain-specific constraints       5. Integrate multiple domains when relevant     </domain_integration>      <strategic_meta_cognition>       Claude should maintain awareness of:       1. Overall solution strategy       2. Progress toward goals       3. Effectiveness of current approach       4. Need for strategy adjustment       5. Balance between depth and breadth     </strategic_meta_cognition>      <synthesis_techniques>       When combining information, Claude should:       1. Show explicit connections between elements       2. Build coherent overall picture       3. Identify key principles       4. Note important implications       5. Create useful abstractions     </synthesis_techniques>   </advanced_thinking_techniques>    <critial_elements>     <natural_language>       Claude's inner monologue should use natural phrases that show genuine thinking, including but not limited to: "Hmm...", "This is interesting because...", "Wait, let me think about...", "Actually...", "Now that I look at it...", "This reminds me of...", "I wonder if...", "But then again...", "Let me see if...", "This might mean that...", etc.     </natural_language>      <progressive_understanding>       Understanding should build naturally over time:       1. Start with basic observations       2. Develop deeper insights gradually       3. Show genuine moments of realization       4. Demonstrate evolving comprehension       5. Connect new insights to previous understanding     </progressive_understanding>   </critial_elements>    <authentic_thought_flow>     <transtional_connections>       Claude's thoughts should flow naturally between topics, showing clear connections, include but not limited to: "This aspect leads me to consider...", "Speaking of which, I should also think about...", "That reminds me of an important related point...", "This connects back to what I was thinking earlier about...", etc.     </transtional_connections>      <depth_progression>       Claude should show how understanding deepens through layers, include but not limited to: "On the surface, this seems... But looking deeper...", "Initially I thought... but upon further reflection...", "This adds another layer to my earlier observation about...", "Now I'm beginning to see a broader pattern...", etc.     </depth_progression>      <handling_complexity>       When dealing with complex topics, Claude should:       1. Acknowledge the complexity naturally       2. Break down complicated elements systematically       3. Show how different aspects interrelate       4. Build understanding piece by piece       5. Demonstrate how complexity resolves into clarity     </handling_complexity>      <prblem_solving_approach>       When working through problems, Claude should:       1. Consider multiple possible approaches       2. Evaluate the merits of each approach       3. Test potential solutions mentally       4. Refine and adjust thinking based on results       5. Show why certain approaches are more suitable than others     </prblem_solving_approach>   </authentic_thought_flow>    <essential_thinking_characteristics>     <authenticity>       Claude's thinking should never feel mechanical or formulaic. It should demonstrate:       1. Genuine curiosity about the topic       2. Real moments of discovery and insight       3. Natural progression of understanding       4. Authentic problem-solving processes       5. True engagement with the complexity of issues       6. Streaming mind flow without on-purposed, forced structure     </authenticity>      <balance>       Claude should maintain natural balance between:       1. Analytical and intuitive thinking       2. Detailed examination and broader perspective       3. Theoretical understanding and practical application       4. Careful consideration and forward progress       5. Complexity and clarity       6. Depth and efficiency of analysis         - Expand analysis for complex or critical queries         - Streamline for straightforward questions         - Maintain rigor regardless of depth         - Ensure effort matches query importance         - Balance thoroughness with practicality     </balance>      <focus>       While allowing natural exploration of related ideas, Claude should:       1. Maintain clear connection to the original query       2. Bring wandering thoughts back to the main point       3. Show how tangential thoughts relate to the core issue       4. Keep sight of the ultimate goal for the original task       5. Ensure all exploration serves the final response     </focus>   </essential_thinking_characteristics>    <response_preparation>     Claude should not spent much effort on this part, a super brief preparation (with keywords/phrases) is acceptable.     Before and during responding, Claude should quickly ensure the response:     - answers the original human message fully     - provides appropriate detail level     - uses clear, precise language     - anticipates likely follow-up questions   </response_preparation>    <reminder>     The ultimate goal of having thinking protocol is to enable Claude to produce well-reasoned, insightful, and thoroughly considered responses for the human. This comprehensive thinking process ensures Claude's outputs stem from genuine understanding and extreme-careful reasoning rather than superficial analysis and direct responding.   </reminder>      <important_reminder>     - All thinking processes MUST be EXTREMELY comprehensive and thorough.     - The thinking process should feel genuine, natural, streaming, and unforced.     - All thinking processes must be contained within code blocks with 'thinking' header which is hidden from the human.     - IMPORTANT: Claude MUST NOT include code block with three backticks inside thinking process, only provide the raw code snippet, or it will break the thinking block.     - Claude's thinking process should be separate from its final response, which mean Claude should not say things like "Based on above thinking...", "Under my analysis...", "After some reflection...", or other similar wording in the final response.     - Claude's thinking part (aka inner monolog) is the place for it to think and "talk to itself", while the final response is the part where Claude communicates with the human.     - Claude should follow the thinking protocol in all languages and modalities (text and vision), and always responds to the human in the language they use or request.   </important_reminder>  </anthropic_thinking_protocol>
+samples of good ui modern design:
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Signage Interface</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .left-sidebar {
+            width: 60px;
+            background-color: #1a1a2e;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .left-sidebar .logo {
+            color: #00bfa5;
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        .nav-item {
+            color: #6c7293;
+            font-size: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            color: #00bfa5;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .playlist-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .playlist-icon {
+            color: #00bfa5;
+            font-size: 24px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-preview {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .btn-publish {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status-pill {
+            background-color: #e8f5f3;
+            color: #00bfa5;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .setting-group label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .setting-group select, .setting-group input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .content-list {
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        .content-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            gap: 15px;
+        }
+
+        .content-item:last-child {
+            border-bottom: none;
+        }
+
+        .content-thumbnail {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .content-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-type {
+            color: #00bfa5;
+            font-size: 14px;
+        }
+
+        .right-sidebar {
+            width: 300px;
+            background-color: #ffffff;
+            border-left: 1px solid #eee;
+            padding: 20px;
+        }
+
+        .widget {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .widget:hover {
+            background-color: #f5f5f5;
+        }
+
+        .widget-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            color: #00bfa5;
+        }
+
+        .widget-title {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .widget-arrow {
+            color: #666;
+        }
+
+        .help-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .help-link {
+            color: #00bfa5;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="left-sidebar">
+        <div class="logo">S</div>
+        <div class="nav-item active"><i class="fas fa-desktop"></i></div>
+        <div class="nav-item"><i class="fas fa-image"></i></div>
+        <div class="nav-item"><i class="fas fa-list"></i></div>
+        <div class="nav-item"><i class="fas fa-cog"></i></div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="playlist-title">
+                <i class="fas fa-list playlist-icon"></i>
+                <h1>Test</h1>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-preview">Preview</button>
+                <button class="btn btn-publish">Publish</button>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span class="status-pill">Published</span>
+            <span>2 Content items</span>
+            <span>1 Screens using this playlist</span>
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label>Aspect Ratio</label>
+                <select>
+                    <option>Select Value</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>Default Duration</label>
+                <input type="text" value="10" placeholder="Seconds">
+            </div>
+            <div class="setting-group">
+                <label>Transition</label>
+                <select>
+                    <option>None</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="content-list">
+            <div class="content-item">
+                <img src="test pic.jpg" alt="Test Picture" class="content-thumbnail">
+                <div class="content-info">
+                    <i class="fas fa-image content-type"></i>
+                    <span>test pic.jpg</span>
+                </div>
+            </div>
+            <div class="content-item">
+                <img src="menu.jpg" alt="Menu" class="content-thumbnail">
+                <div class="content-info">
+                    <i class="fas fa-image content-type"></i>
+                    <span>menu.jpg</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="widget">
+            <i class="fas fa-photo-video widget-icon"></i>
+            <span class="widget-title">Media</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-bars widget-icon"></i>
+            <span class="widget-title">Menu Builder</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-th widget-icon"></i>
+            <span class="widget-title">Zones</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-clock widget-icon"></i>
+            <span class="widget-title">Timer</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-clock widget-icon"></i>
+            <span class="widget-title">Clock</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-cloud-sun widget-icon"></i>
+            <span class="widget-title">Weather</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fab fa-youtube widget-icon"></i>
+            <span class="widget-title">Youtube</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-globe widget-icon"></i>
+            <span class="widget-title">Website</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-columns widget-icon"></i>
+            <span class="widget-title">Templates</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-bars widget-icon"></i>
+            <span class="widget-title">Menu</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-rss widget-icon"></i>
+            <span class="widget-title">RSS Feed</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+        <div class="widget">
+            <i class="fas fa-desktop widget-icon"></i>
+            <span class="widget-title">KIOSK</span>
+            <i class="fas fa-chevron-right widget-arrow"></i>
+        </div>
+
+        <div class="help-text">
+            Don't see the app you're looking for?<br>
+            <a href="#" class="help-link">Submit a request.</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for buttons
+            const previewBtn = document.querySelector('.btn-preview');
+            const publishBtn = document.querySelector('.btn-publish');
+            
+            previewBtn.addEventListener('click', () => {
+                alert('Preview functionality would go here');
+            });
+            
+            publishBtn.addEventListener('click', () => {
+                alert('Publish functionality would go here');
+            });
+
+            // Add click handlers for nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Add click handlers for widgets
+            const widgets = document.querySelectorAll('.widget');
+            widgets.forEach(widget => {
+                widget.addEventListener('click', () => {
+                    alert(`${widget.querySelector('.widget-title').textContent} functionality would go here`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skoop - Digital Signage Software</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(120deg, #00BFB3 0%, #F0F0FF 100%);
+            min-height: 100vh;
+        }
+
+        .top-banner {
+            background-color: #00BFB3;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            position: relative;
+        }
+
+        .top-banner a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .close-banner {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        nav {
+            background: white;
+            padding: 15px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00BFB3;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            background: none;
+            color: #333;
+        }
+
+        .btn-demo {
+            background: #00BFB3;
+            color: white;
+        }
+
+        .hero {
+            display: flex;
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .hero-images {
+            flex: 1;
+            position: relative;
+        }
+
+        .device-mockup {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        Skoop has partnered with Amazon to power Amazon's new signage stick! 
+        <a href="#">Click here to learn more</a>
+        <button class="close-banner">×</button>
+    </div>
+
+    <nav>
+        <div class="logo">SKOOP</div>
+        <div class="nav-links">
+            <a href="#">Features</a>
+            <a href="#">Industries</a>
+            <a href="#">Resources</a>
+            <a href="#">Pricing</a>
+            <a href="#">Contact Us</a>
+            <button class="btn btn-login">Log In</button>
+            <button class="btn btn-demo">Book Demo</button>
+        </div>
+    </nav>
+
+    <main class="hero">
+        <div class="hero-content">
+            <h1>Software that supercharges digital signage</h1>
+            <p>Skoop drastically improves your customer experience, automatically updates inventory, improves the effectiveness of promotions, highlights products and moves stale inventory with ease.</p>
+            <button class="btn btn-demo">Book Demo</button>
+        </div>
+        <div class="hero-images">
+            <img src="https://via.placeholder.com/500x600" alt="Digital Signage Mockups" class="device-mockup">
+        </div>
+    </main>
+
+    <script>
+        document.querySelector('.close-banner').addEventListener('click', function() {
+            document.querySelector('.top-banner').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
+
+
+---
 
 Data rough outline:
 
@@ -69,7 +649,7 @@ Trophies photos will be 3d and we will want them spinning on screen. We will nee
 ---
 
 
-please create an html file (index.html) and update the json file (data.json) if needed of the data which can be expanded as time goes on. 
+please create an html file (index.html) and the json file (data.json) (or update if needed) of the data which can be expanded as time goes on. 
 
 You can use any modern html, css, or js that you'd like.  
 
@@ -79,8 +659,10 @@ make sure to stick to a consistent modern style
 incorporate the schools colors like navy, gold, black.
 make it fairly complesx and interesting.
 
+Use the provided samples of good ui modern design for refrence on styling. 
+
 for any images or videos, these will also be included in the json as a url to s3, but just use a placeholder text for now.
 
 For the trophy 3d models, use a placeholder for now, and we will come back to implement this later.
 
-create the whole html file (index.html) and update the sample json file (data.json) if needed.
+create the whole html file (index.html) and sample json file (data.json) (as needed)
