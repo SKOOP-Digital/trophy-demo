@@ -18,6 +18,7 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #f8f9fa;
             color: var(--accent-color);
+            overflow-x: hidden;
         }
 
         .header {
@@ -46,85 +47,7 @@
             margin-bottom: 80px;
             min-height: calc(100vh - 160px);
             padding: 2rem 0;
-        }
-
-        .school-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform var(--transition-speed);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            height: 100%;
-        }
-
-        .school-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .school-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .sport-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform var(--transition-speed);
-            cursor: pointer;
-            height: 100%;
-        }
-
-        .sport-card:hover {
-            transform: scale(1.02);
-        }
-
-        .athlete-card {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform var(--transition-speed);
-        }
-
-        .athlete-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .trophy-viewer {
-            width: 100%;
-            height: 400px;
-            background: #f0f0f0;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-pills .nav-link {
-            color: var(--primary-color);
-            border-radius: 20px;
-            margin: 0 5px;
-        }
-
-        .nav-pills .nav-link.active {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-        }
-
-        .section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            position: relative;
         }
 
         .background-video {
@@ -137,6 +60,58 @@
             height: auto;
             z-index: -1;
             opacity: 0.1;
+            object-fit: cover;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all var(--transition-speed);
+            height: 100%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .mascot-overlay {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            transform: rotate(15deg);
+            transition: transform var(--transition-speed);
+        }
+
+        .card:hover .mascot-overlay {
+            transform: rotate(0deg) scale(1.1);
         }
 
         .achievement-badge {
@@ -147,13 +122,113 @@
             font-size: 0.9rem;
             margin: 0.25rem;
             display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .player-stats {
-            background: rgba(0,0,0,0.05);
+        .sport-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .year-timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .year-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: var(--secondary-color);
+            transform: translateX(-50%);
+        }
+
+        .year-item {
+            position: relative;
+            margin: 2rem 0;
+            cursor: pointer;
+        }
+
+        .year-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: all var(--transition-speed);
+        }
+
+        .year-item:hover::before {
+            background: var(--primary-color);
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        .trophy-viewer {
+            width: 100%;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trophy-viewer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-color), transparent);
+            opacity: 0.1;
+        }
+
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .athlete-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .athlete-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .athlete-stats {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 1rem;
             margin-top: 1rem;
+            backdrop-filter: blur(5px);
         }
 
         .loading-spinner {
@@ -169,6 +244,29 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .back-button {
+            position: fixed;
+            left: 2rem;
+            bottom: 100px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -176,61 +274,39 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="h3 mb-0">Saginaw Schools Trophy Room</h1>
-                <nav>
-                    <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#schools">Schools</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#sports">Sports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#athletes">Athletes</a>
-                        </li>
-                    </ul>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item active">Schools</li>
+                    </ol>
                 </nav>
             </div>
         </div>
     </header>
 
     <main class="main-content">
+        <video class="background-video" autoplay muted loop>
+            <source src="" type="video/mp4">
+        </video>
+
         <div class="container">
-            <!-- Schools Section -->
-            <section id="schools" class="section active">
-                <div class="row g-4">
+            <!-- Step 1: Schools and Athletes -->
+            <section id="step-1" class="step active">
+                <div class="row g-4 mb-5">
                     <template id="school-template">
                         <div class="col-md-4">
-                            <div class="school-card">
-                                <img class="school-image" src="" alt="">
-                                <div class="card-body p-3">
+                            <div class="card">
+                                <img class="card-img-top" src="" alt="">
+                                <img class="mascot-overlay" src="" alt="">
+                                <div class="card-body">
                                     <h3 class="h5 mb-2"></h3>
-                                    <p class="text-muted"></p>
+                                    <p class="text-muted mb-3"></p>
+                                    <div class="achievements"></div>
                                 </div>
                             </div>
                         </div>
                     </template>
                 </div>
-            </section>
 
-            <!-- Sports Section -->
-            <section id="sports" class="section">
-                <div class="row g-4">
-                    <template id="sport-template">
-                        <div class="col-md-4 col-lg-3">
-                            <div class="sport-card">
-                                <img class="sport-image" src="" alt="">
-                                <div class="card-body p-3">
-                                    <h3 class="h5 mb-2"></h3>
-                                    <p class="text-muted"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </section>
-
-            <!-- Athletes Section -->
-            <section id="athletes" class="section">
                 <div class="row mb-4">
                     <div class="col-12">
                         <h2 class="h4 mb-3">D1 Athletes</h2>
@@ -245,13 +321,15 @@
                                                 <p class="small mb-0"></p>
                                             </div>
                                         </div>
-                                        <div class="achievements"></div>
+                                        <div class="achievements mb-3"></div>
+                                        <div class="athlete-stats"></div>
                                     </div>
                                 </div>
                             </template>
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-12">
                         <h2 class="h4 mb-3">Professional Athletes</h2>
@@ -260,23 +338,50 @@
                 </div>
             </section>
 
-            <!-- Trophy Viewer Modal -->
-            <div class="modal fade" id="trophyModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="trophy-viewer">
-                                <div class="text-center">
-                                    <p>3D Trophy Viewer</p>
-                                    <p class="text-muted">(Placeholder - Coming Soon)</p>
+            <!-- Step 2: Sports -->
+            <section id="step-2" class="step">
+                <div class="row g-4">
+                    <template id="sport-template">
+                        <div class="col-md-4 col-lg-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div class="sport-icon"></div>
+                                    <h3 class="h5 mb-2"></h3>
+                                    <p class="text-muted"></p>
                                 </div>
                             </div>
-                            <div class="team-info mt-4">
-                                <h6>Team Roster</h6>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Step 3: Years -->
+            <section id="step-3" class="step">
+                <div class="year-timeline">
+                    <template id="year-template">
+                        <div class="year-item text-center">
+                            <h3 class="h5 mb-2"></h3>
+                            <div class="achievements"></div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Step 4: Team Details -->
+            <section id="step-4" class="step">
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="trophy-viewer">
+                            <div class="text-center">
+                                <p>3D Trophy Viewer</p>
+                                <p class="text-muted">(Coming Soon)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="h4 mb-4">Team Roster</h3>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -285,6 +390,7 @@
                                                 <th>Number</th>
                                                 <th>Position</th>
                                                 <th>Stats</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -294,8 +400,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
+
+        <button class="back-button d-none">
+            <i class="fas fa-arrow-left"></i>
+        </button>
     </main>
 
     <footer class="footer">
@@ -313,6 +423,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        let currentStep = 1;
+        let selectedSchool = null;
+        let selectedSport = null;
+        let selectedYear = null;
+
         // Load and initialize data
         async function loadData() {
             try {
@@ -328,66 +443,177 @@
             // Update last updated date
             document.getElementById('lastUpdated').textContent = new Date(data.metadata.lastUpdated).toLocaleDateString();
 
+            // Set default background video
+            updateBackgroundVideo(data.metadata.backgrounds.default);
+
             // Initialize sections
             initializeSchools(data.schools);
-            initializeSports(data.sports);
             initializeAthletes(data.athletes);
 
             // Setup navigation
             setupNavigation();
         }
 
+        function updateBackgroundVideo(url) {
+            const video = document.querySelector('.background-video');
+            video.src = url;
+            video.load();
+        }
+
         function initializeSchools(schools) {
-            const container = document.querySelector('#schools .row');
+            const container = document.querySelector('#step-1 .row');
             const template = document.getElementById('school-template');
 
             schools.forEach(school => {
                 const clone = template.content.cloneNode(true);
-                const card = clone.querySelector('.school-card');
-                const img = clone.querySelector('.school-image');
+                const card = clone.querySelector('.card');
+                const img = clone.querySelector('.card-img-top');
+                const mascot = clone.querySelector('.mascot-overlay');
                 const title = clone.querySelector('h3');
                 const description = clone.querySelector('p');
+                const achievements = clone.querySelector('.achievements');
 
                 img.src = school.imageUrl;
                 img.alt = school.name;
+                mascot.src = school.mascotImage;
+                mascot.alt = `${school.name} Mascot`;
                 title.textContent = school.name;
                 description.textContent = school.description;
+
+                school.featuredAchievements.forEach(achievement => {
+                    const badge = document.createElement('span');
+                    badge.className = 'achievement-badge';
+                    badge.textContent = `${achievement.title} (${achievement.year})`;
+                    achievements.appendChild(badge);
+                });
+
+                card.addEventListener('click', () => {
+                    selectedSchool = school;
+                    navigateToStep(2);
+                    initializeSports(data.sports.filter(sport => school.sports.includes(sport.id)));
+                    updateBackgroundVideo(school.backgroundVideo);
+                });
 
                 container.appendChild(clone);
             });
         }
 
         function initializeSports(sports) {
-            const container = document.querySelector('#sports .row');
+            const container = document.querySelector('#step-2 .row');
             const template = document.getElementById('sport-template');
+            container.innerHTML = '';
 
             sports.forEach(sport => {
                 const clone = template.content.cloneNode(true);
-                const img = clone.querySelector('.sport-image');
+                const card = clone.querySelector('.card');
+                const icon = clone.querySelector('.sport-icon');
                 const title = clone.querySelector('h3');
                 const description = clone.querySelector('p');
 
-                img.src = sport.imageUrl;
-                img.alt = sport.name;
+                icon.textContent = sport.icon;
                 title.textContent = sport.name;
                 description.textContent = sport.description;
+
+                card.addEventListener('click', () => {
+                    selectedSport = sport;
+                    navigateToStep(3);
+                    initializeYears(data.years);
+                    updateBackgroundVideo(sport.backgroundMedia);
+                });
 
                 container.appendChild(clone);
             });
         }
 
-        function initializeAthletes(athletes) {
-            const d1Container = document.getElementById('d1-athletes');
-            const proContainer = document.getElementById('pro-athletes');
-            const template = document.getElementById('athlete-template');
+        function initializeYears(years) {
+            const container = document.querySelector('.year-timeline');
+            const template = document.getElementById('year-template');
+            container.innerHTML = '';
 
+            Object.entries(years).reverse().forEach(([year, yearData]) => {
+                const achievements = yearData.achievements.filter(
+                    a => a.schoolId === selectedSchool.id && a.sportId === selectedSport.id
+                );
+
+                if (achievements.length > 0) {
+                    const clone = template.content.cloneNode(true);
+                    const yearItem = clone.querySelector('.year-item');
+                    const title = clone.querySelector('h3');
+                    const achievementsContainer = clone.querySelector('.achievements');
+
+                    title.textContent = year;
+                    achievements.forEach(achievement => {
+                        const badge = document.createElement('span');
+                        badge.className = 'achievement-badge';
+                        badge.textContent = achievement.achievement;
+                        achievementsContainer.appendChild(badge);
+                    });
+
+                    yearItem.addEventListener('click', () => {
+                        selectedYear = year;
+                        navigateToStep(4);
+                        initializeTeamDetails(achievements[0]);
+                    });
+
+                    container.appendChild(clone);
+                }
+            });
+        }
+
+        function initializeTeamDetails(achievement) {
+            // Update trophy viewer placeholder
+            const trophyViewer = document.querySelector('.trophy-viewer');
+            trophyViewer.style.backgroundImage = `url(${achievement.backgroundImage})`;
+
+            // Populate roster table
+            const tbody = document.querySelector('#step-4 table tbody');
+            tbody.innerHTML = '';
+
+            achievement.roster.forEach(player => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${player.photo}" alt="${player.name}" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                            ${player.name}
+                        </div>
+                    </td>
+                    <td>${player.number}</td>
+                    <td>${player.position}</td>
+                    <td>${formatStats(player.stats)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="showPlayerHighlights('${player.highlights}')">
+                            <i class="fas fa-play me-1"></i> Highlights
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function formatStats(stats) {
+            return Object.entries(stats)
+                .map(([key, value]) => `${key.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${value}`)
+                .join(', ');
+        }
+
+        function showPlayerHighlights(url) {
+            // Placeholder for future implementation
+            alert('Player highlights feature coming soon!');
+        }
+
+        function initializeAthletes(athletes) {
             function populateAthletes(container, athleteList) {
+                const template = document.getElementById('athlete-template');
+
                 athleteList.forEach(athlete => {
                     const clone = template.content.cloneNode(true);
+                    const card = clone.querySelector('.athlete-card');
                     const img = clone.querySelector('img');
                     const name = clone.querySelector('h4');
                     const details = clone.querySelector('p');
                     const achievements = clone.querySelector('.achievements');
+                    const stats = clone.querySelector('.athlete-stats');
 
                     img.src = athlete.photo;
                     img.alt = athlete.name;
@@ -401,35 +627,51 @@
                         achievements.appendChild(badge);
                     });
 
+                    stats.innerHTML = `
+                        <h6 class="mb-2">Career Statistics</h6>
+                        ${formatStats(athlete.stats)}
+                    `;
+
                     container.appendChild(clone);
                 });
             }
+
+            const d1Container = document.getElementById('d1-athletes');
+            const proContainer = document.getElementById('pro-athletes');
+
+            d1Container.innerHTML = '';
+            proContainer.innerHTML = '';
 
             populateAthletes(d1Container, athletes.d1);
             populateAthletes(proContainer, athletes.pro);
         }
 
+        function navigateToStep(step) {
+            const sections = document.querySelectorAll('.step');
+            const backButton = document.querySelector('.back-button');
+            const breadcrumb = document.querySelector('.breadcrumb');
+
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+
+            currentStep = step;
+            backButton.classList.toggle('d-none', step === 1);
+
+            // Update breadcrumb
+            const steps = ['Schools', 'Sports', 'Years', 'Team Details'];
+            breadcrumb.innerHTML = steps.slice(0, step).map((text, index) => `
+                <li class="breadcrumb-item${index === step - 1 ? ' active' : ''}">
+                    ${index === step - 1 ? text : `<a href="#" onclick="navigateToStep(${index + 1})">${text}</a>`}
+                </li>
+            `).join('');
+        }
+
         function setupNavigation() {
-            const links = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('.section');
-
-            links.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-
-                    // Update navigation
-                    links.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-
-                    // Update sections
-                    sections.forEach(section => {
-                        section.classList.remove('active');
-                        if (section.id === targetId) {
-                            section.classList.add('active');
-                        }
-                    });
-                });
+            const backButton = document.querySelector('.back-button');
+            backButton.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    navigateToStep(currentStep - 1);
+                }
             });
         }
 

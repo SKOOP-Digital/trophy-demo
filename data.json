@@ -6,12 +6,21 @@
             "description": "Home of the Trojans",
             "imageUrl": "placeholder_url/saginaw-high.jpg",
             "backgroundVideo": "placeholder_url/saginaw-high-background.mp4",
+            "mascotImage": "placeholder_url/trojans-mascot.png",
             "colors": {
                 "primary": "#000080",
                 "secondary": "#FFD700",
                 "accent": "#000000"
             },
-            "sports": ["basketball-men", "basketball-women", "football", "track-field-men", "track-field-women"]
+            "sports": ["basketball-men", "basketball-women", "football", "track-field-men", "track-field-women"],
+            "featuredAchievements": [
+                {
+                    "year": "2023",
+                    "sport": "basketball-men",
+                    "title": "District Champions",
+                    "backgroundImage": "placeholder_url/2023-district-champs.jpg"
+                }
+            ]
         },
         {
             "id": "arthur-hill",
@@ -19,12 +28,21 @@
             "description": "Home of the Lumberjacks",
             "imageUrl": "placeholder_url/arthur-hill.jpg",
             "backgroundVideo": "placeholder_url/arthur-hill-background.mp4",
+            "mascotImage": "placeholder_url/lumberjacks-mascot.png",
             "colors": {
                 "primary": "#000080",
                 "secondary": "#FFD700",
                 "accent": "#000000"
             },
-            "sports": ["basketball-men", "basketball-women", "football", "baseball"]
+            "sports": ["basketball-men", "basketball-women", "football", "baseball"],
+            "featuredAchievements": [
+                {
+                    "year": "2022",
+                    "sport": "football",
+                    "title": "Regional Champions",
+                    "backgroundImage": "placeholder_url/2022-regional-champs.jpg"
+                }
+            ]
         },
         {
             "id": "saginaw-united",
@@ -32,12 +50,14 @@
             "description": "United We Stand",
             "imageUrl": "placeholder_url/saginaw-united.jpg",
             "backgroundVideo": "placeholder_url/saginaw-united-background.mp4",
+            "mascotImage": "placeholder_url/united-mascot.png",
             "colors": {
                 "primary": "#000080",
                 "secondary": "#FFD700",
                 "accent": "#000000"
             },
-            "sports": ["basketball-men", "basketball-women", "football"]
+            "sports": ["basketball-men", "basketball-women", "football"],
+            "featuredAchievements": []
         }
     ],
     "sports": [
@@ -46,68 +66,76 @@
             "name": "Men's Basketball",
             "description": "Varsity Men's Basketball Program",
             "imageUrl": "placeholder_url/basketball-men.jpg",
-            "backgroundMedia": "placeholder_url/basketball-background.mp4"
+            "backgroundMedia": "placeholder_url/basketball-background.mp4",
+            "icon": "🏀"
         },
         {
             "id": "basketball-women",
             "name": "Women's Basketball",
             "description": "Varsity Women's Basketball Program",
             "imageUrl": "placeholder_url/basketball-women.jpg",
-            "backgroundMedia": "placeholder_url/basketball-women-background.mp4"
+            "backgroundMedia": "placeholder_url/basketball-women-background.mp4",
+            "icon": "🏀"
         },
         {
             "id": "football",
             "name": "Football",
             "description": "Varsity Football Program",
             "imageUrl": "placeholder_url/football.jpg",
-            "backgroundMedia": "placeholder_url/football-background.mp4"
+            "backgroundMedia": "placeholder_url/football-background.mp4",
+            "icon": "🏈"
         },
         {
             "id": "baseball",
             "name": "Baseball",
             "description": "Varsity Baseball Program",
             "imageUrl": "placeholder_url/baseball.jpg",
-            "backgroundMedia": "placeholder_url/baseball-background.mp4"
+            "backgroundMedia": "placeholder_url/baseball-background.mp4",
+            "icon": "⚾"
         },
         {
             "id": "softball",
             "name": "Women's Softball",
             "description": "Varsity Women's Softball Program",
             "imageUrl": "placeholder_url/softball.jpg",
-            "backgroundMedia": "placeholder_url/softball-background.mp4"
+            "backgroundMedia": "placeholder_url/softball-background.mp4",
+            "icon": "🥎"
         },
         {
             "id": "wrestling",
             "name": "Wrestling",
             "description": "Varsity Wrestling Program",
             "imageUrl": "placeholder_url/wrestling.jpg",
-            "backgroundMedia": "placeholder_url/wrestling-background.mp4"
+            "backgroundMedia": "placeholder_url/wrestling-background.mp4",
+            "icon": "🤼"
         },
         {
             "id": "lacrosse",
             "name": "Lacrosse",
             "description": "Varsity Lacrosse Program",
             "imageUrl": "placeholder_url/lacrosse.jpg",
-            "backgroundMedia": "placeholder_url/lacrosse-background.mp4"
+            "backgroundMedia": "placeholder_url/lacrosse-background.mp4",
+            "icon": "🥍"
         },
         {
             "id": "track-field-women",
             "name": "Women's Track & Field",
             "description": "Women's Track and Field Program",
             "imageUrl": "placeholder_url/track-field-women.jpg",
-            "backgroundMedia": "placeholder_url/track-field-women-background.mp4"
+            "backgroundMedia": "placeholder_url/track-field-women-background.mp4",
+            "icon": "🏃‍♀️"
         },
         {
             "id": "track-field-men",
             "name": "Men's Track & Field",
             "description": "Men's Track and Field Program",
             "imageUrl": "placeholder_url/track-field-men.jpg",
-            "backgroundMedia": "placeholder_url/track-field-men-background.mp4"
+            "backgroundMedia": "placeholder_url/track-field-men-background.mp4",
+            "icon": "🏃"
         }
     ],
-    "years": [
-        {
-            "year": "2023",
+    "years": {
+        "2023": {
             "achievements": [
                 {
                     "schoolId": "saginaw-high",
@@ -116,24 +144,27 @@
                     "trophyModel": "placeholder_url/trophy-2023-basketball.glb",
                     "trophyImage": "placeholder_url/trophy-2023-basketball.jpg",
                     "teamPhoto": "placeholder_url/team-2023-basketball.jpg",
+                    "backgroundImage": "placeholder_url/background-2023-basketball.jpg",
+                    "celebrationVideo": "placeholder_url/celebration-2023-basketball.mp4",
+                    "celebrationAudio": "placeholder_url/celebration-2023-basketball.mp3",
                     "roster": [
                         {
                             "name": "John Doe",
                             "number": "23",
                             "position": "Guard",
+                            "photo": "placeholder_url/player-john-doe.jpg",
                             "stats": {
                                 "pointsPerGame": 15.5,
                                 "assistsPerGame": 4.2,
                                 "reboundsPerGame": 3.1
                             },
-                            "photo": "placeholder_url/player-john-doe.jpg"
+                            "highlights": "placeholder_url/highlights-john-doe.mp4"
                         }
                     ]
                 }
             ]
         },
-        {
-            "year": "2022",
+        "2022": {
             "achievements": [
                 {
                     "schoolId": "arthur-hill",
@@ -142,23 +173,27 @@
                     "trophyModel": "placeholder_url/trophy-2022-football.glb",
                     "trophyImage": "placeholder_url/trophy-2022-football.jpg",
                     "teamPhoto": "placeholder_url/team-2022-football.jpg",
+                    "backgroundImage": "placeholder_url/background-2022-football.jpg",
+                    "celebrationVideo": "placeholder_url/celebration-2022-football.mp4",
+                    "celebrationAudio": "placeholder_url/celebration-2022-football.mp3",
                     "roster": [
                         {
                             "name": "Jane Smith",
                             "number": "42",
                             "position": "Quarterback",
+                            "photo": "placeholder_url/player-jane-smith.jpg",
                             "stats": {
                                 "passingYards": 2500,
                                 "touchdowns": 28,
                                 "interceptions": 8
                             },
-                            "photo": "placeholder_url/player-jane-smith.jpg"
+                            "highlights": "placeholder_url/highlights-jane-smith.mp4"
                         }
                     ]
                 }
             ]
         }
-    ],
+    },
     "athletes": {
         "d1": [
             {
@@ -168,7 +203,13 @@
                 "sport": "basketball-men",
                 "college": "Michigan State University",
                 "achievements": ["All-State 2020", "Mr. Basketball Finalist"],
-                "photo": "placeholder_url/john-smith.jpg"
+                "photo": "placeholder_url/john-smith.jpg",
+                "highlights": "placeholder_url/highlights-john-smith.mp4",
+                "stats": {
+                    "careerPoints": 1500,
+                    "careerAssists": 400,
+                    "careerRebounds": 300
+                }
             }
         ],
         "pro": [
@@ -179,19 +220,32 @@
                 "sport": "basketball-women",
                 "professional": "WNBA - Chicago Sky",
                 "achievements": ["WNBA All-Star 2022"],
-                "photo": "placeholder_url/jane-wilson.jpg"
+                "photo": "placeholder_url/jane-wilson.jpg",
+                "highlights": "placeholder_url/highlights-jane-wilson.mp4",
+                "stats": {
+                    "proPoints": 2500,
+                    "proAssists": 600,
+                    "proRebounds": 450
+                }
             }
         ]
     },
     "metadata": {
         "lastUpdated": "2024-02-20",
         "version": "1.0.0",
-        "supportedMediaTypes": ["jpg", "mp4", "glb"],
+        "supportedMediaTypes": ["jpg", "mp4", "glb", "mp3"],
         "maxFileSize": "50MB",
         "defaultColors": {
             "primary": "#000080",
             "secondary": "#FFD700",
             "accent": "#000000"
+        },
+        "backgrounds": {
+            "default": "placeholder_url/default-background.mp4",
+            "schools": "placeholder_url/schools-background.mp4",
+            "sports": "placeholder_url/sports-background.mp4",
+            "years": "placeholder_url/years-background.mp4",
+            "athletes": "placeholder_url/athletes-background.mp4"
         }
     }
 }

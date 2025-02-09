@@ -768,9 +768,30 @@ Would you like me to explain any specific part in more detail or make any adjust
 
 ---
 
-_****_
+_**User**_
 
 
+
+go back to the instructions (prompt.md) and make sure the app and data are the best they can be according to the goals and rules and anything else helpfull. 
+
+---
+
+_**Assistant**_
+
+```thinking
+Let me carefully review the original requirements and compare them with our current implementation...
+
+Looking at the step/window structure:
+1. First window needs:
+- Schools (✓ implemented)
+- D1 Athletes (✓ implemented)
+- Pro Athletes (✓ implemented)
+- Background video (✓ placeholder in JSON)
+But hmm... the current implementation has these as separate tabs rather than one unified view. That's not ideal.
+
+2. Second window needs:
+- All sports listed (✓ implemented)
+- Cool background (partially implemented - needs more dynamic elements
 
 ---
 
