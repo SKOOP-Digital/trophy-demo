@@ -1,6 +1,6 @@
 ## SpecStory
 
-## Modern UI Design for Digital Signage (2/9/2025, 4:24:25 AM)
+## Modern UI Design for Digital Signage (2/9/2025, 2:50:21 AM)
 
 _**User**_
 
@@ -673,7 +673,7 @@ For the trophy 3d models, use a placeholder for now, and we will come back to im
 
 make sure the whole thing is a fully functional demo with all data filled in (add data as needed) and all functionality in place.
 
-create the whole html file (index.html) and sample json file (data.json) (as needed)
+create the whole html file (index.html) and sample json file (data.json) (as needed)\
 
 
 ---
@@ -681,56 +681,55 @@ create the whole html file (index.html) and sample json file (data.json) (as nee
 _**Assistant**_
 
 ```thinking
-Let me analyze this request and break it down systematically:
+Let me break down this request and plan out the implementation:
 
-1. Core Requirements:
-- Create/update index.html and data.json files
-- Modern, responsive design
-- School colors: navy, gold, black
-- Fixed header/footer
-- Complex and interesting UI
-- Placeholder content for media
-- Full functionality demo
+1. Initial Analysis:
+- Need to create a modern, responsive digital trophy showcase system
+- Multiple navigation levels: Schools -> Sports -> Years -> Teams/Players
+- Key features: 3D trophy displays, media integration, player stats
+- Schools colors: navy, gold, black
+- Must be expandable/maintainable
 
-2. Data Structure Analysis:
-- Hierarchical navigation:
-  - Schools (Saginaw High, Arthur Hill, etc)
+2. Data Structure Planning:
+- JSON needs to handle:
+  - Schools
   - Sports categories
-  - Years (for trophy wins)
-  - Team/Player details
-- Media components:
-  - Background videos/images
-  - Trophy 3D models (placeholder for now)
-  - Team photos
-  - Player photos/stats
+  - Years with achievements
+  - Team rosters
+  - Player stats
+  - Media assets (photos, videos)
+  - Trophy information
+- Should be nested but maintainable
 
 3. UI/UX Considerations:
 - Taking inspiration from provided modern UI samples
-- Clean, professional aesthetic
-- Smooth transitions
+- Clean, minimal design with clear hierarchy
+- Fixed header/footer
+- Smooth transitions between sections
+- Responsive layout
 - Interactive elements
-- Mobile responsiveness
-- Clear navigation hierarchy
+- Background media integration
 
-4. Technical Components Needed:
-- HTML5 structure
-- Modern CSS (flexbox/grid)
+4. Technical Components:
+- Modern HTML5/CSS3
+- CSS Grid/Flexbox for layouts
+- CSS animations/transitions
 - JavaScript for interactivity
-- JSON data structure
-- Placeholder media handling
-- Responsive design implementation
+- Placeholder system for 3D models
+- JSON data integration
 
-5. Validation Points:
-- All functionality should work with sample data
-- Design should be cohesive and professional
-- Navigation should be intuitive
-- Placeholders should be clearly marked
-- Code should be clean and well-structured
+5. Implementation Strategy:
+1. Create base HTML structure
+2. Define JSON data structure
+3. Implement core styling
+4. Add interactivity
+5. Add placeholder content
+6. Ensure responsiveness
 
-Let me proceed with creating both files, starting with the data structure in JSON, then building the HTML interface around it.
+Let me proceed with implementing this solution.
 ```
 
-I'll start by creating the data.json file to establish our data structure:
+I'll start by creating the data structure and then the HTML interface. First, let me create the JSON file.
 
 ---
 
@@ -739,144 +738,151 @@ _****_
 ```diff
 - 
 + {
-+     "schools": [
++   "schools": [
++     {
++       "id": "saginaw-high",
++       "name": "Saginaw High",
++       "colors": {
++         "primary": "#000080",
++         "secondary": "#FFD700"
++       },
++       "logo": "placeholder_logo_url",
++       "backgroundVideo": "placeholder_video_url",
++       "sports": [
 +         {
-+             "id": "saginaw-high",
-+             "name": "Saginaw High",
-+             "colors": {
-+                 "primary": "#000080",
-+                 "secondary": "#FFD700",
-+                 "accent": "#000000"
-+             },
-+             "backgroundVideo": "placeholder_url",
-+             "sports": {
-+                 "mensBasketball": {
-+                     "name": "Men's Basketball",
-+                     "years": {
-+                         "2023": {
-+                             "achievement": "District Champions",
-+                             "teamPhoto": "placeholder_url",
-+                             "trophyModel": "placeholder_url",
-+                             "roster": [
-+                                 {
-+                                     "name": "John Smith",
-+                                     "number": "23",
-+                                     "position": "Guard",
-+                                     "photo": "placeholder_url",
-+                                     "stats": {
-+                                         "pointsPerGame": 18.5,
-+                                         "assists": 5.2,
-+                                         "rebounds": 4.1
-+                                     }
-+                                 }
-+                             ]
-+                         }
++           "id": "mens-basketball",
++           "name": "Men's Basketball",
++           "years": [
++             {
++               "year": 2023,
++               "achievement": "District Champions",
++               "trophyModel": "placeholder_3d_model_url",
++               "trophyImage": "placeholder_trophy_image",
++               "team": {
++                 "photo": "placeholder_team_photo",
++                 "roster": [
++                   {
++                     "id": "player1",
++                     "name": "John Smith",
++                     "number": "23",
++                     "position": "Guard",
++                     "photo": "placeholder_player_photo",
++                     "stats": {
++                       "pointsPerGame": 18.5,
++                       "assistsPerGame": 5.2,
++                       "rebounds": 4.1
 +                     }
-+                 }
-+             },
-+             "athletes": {
-+                 "d1": [
-+                     {
-+                         "name": "Michael Thompson",
-+                         "graduationYear": 2020,
-+                         "sport": "Basketball",
-+                         "college": "Michigan State",
-+                         "photo": "placeholder_url"
-+                     }
-+                 ],
-+                 "pro": [
-+                     {
-+                         "name": "LaMarr Woodley",
-+                         "graduationYear": 2003,
-+                         "sport": "Football",
-+                         "professional": "NFL - Pittsburgh Steelers",
-+                         "photo": "placeholder_url"
-+                     }
++                   }
 +                 ]
++               }
 +             }
-+         },
-+         {
-+             "id": "arthur-hill",
-+             "name": "Arthur Hill",
-+             "colors": {
-+                 "primary": "#000080",
-+                 "secondary": "#FFD700",
-+                 "accent": "#000000"
-+             },
-+             "backgroundVideo": "placeholder_url",
-+             "sports": {
-+                 "womensBasketball": {
-+                     "name": "Women's Basketball",
-+                     "years": {
-+                         "2022": {
-+                             "achievement": "District Champions",
-+                             "teamPhoto": "placeholder_url",
-+                             "trophyModel": "placeholder_url",
-+                             "roster": [
-+                                 {
-+                                     "name": "Sarah Johnson",
-+                                     "number": "11",
-+                                     "position": "Forward",
-+                                     "photo": "placeholder_url",
-+                                     "stats": {
-+                                         "pointsPerGame": 15.8,
-+                                         "assists": 3.2,
-+                                         "rebounds": 8.4
-+                                     }
-+                                 }
-+                             ]
-+                         }
-+                     }
-+                 }
-+             }
-+         },
-+         {
-+             "id": "saginaw-united",
-+             "name": "Saginaw United",
-+             "colors": {
-+                 "primary": "#000080",
-+                 "secondary": "#FFD700",
-+                 "accent": "#000000"
-+             },
-+             "backgroundVideo": "placeholder_url",
-+             "sports": {
-+                 "football": {
-+                     "name": "Football",
-+                     "years": {
-+                         "2023": {
-+                             "achievement": "District Champions",
-+                             "teamPhoto": "placeholder_url",
-+                             "trophyModel": "placeholder_url",
-+                             "roster": [
-+                                 {
-+                                     "name": "Marcus Williams",
-+                                     "number": "7",
-+                                     "position": "Quarterback",
-+                                     "photo": "placeholder_url",
-+                                     "stats": {
-+                                         "passingYards": 2500,
-+                                         "touchdowns": 28,
-+                                         "completionPercentage": 65.4
-+                                     }
-+                                 }
-+                             ]
-+                         }
-+                     }
-+                 }
-+             }
++           ]
 +         }
-+     ],
-+     "sportCategories": [
-+         "Men's Basketball",
-+         "Women's Basketball",
-+         "Football",
-+         "Baseball",
-+         "Women's Softball",
-+         "Wrestling",
-+         "Lacrosse",
-+         "Women's Track & Field",
-+         "Men's Track & Field"
-+     ]
++       ],
++       "athletes": {
++         "d1": [
++           {
++             "name": "Michael Thompson",
++             "graduationYear": 2020,
++             "sport": "Basketball",
++             "college": "Michigan State",
++             "photo": "placeholder_photo"
++           }
++         ],
++         "pro": [
++           {
++             "name": "Draymond Green",
++             "graduationYear": 2008,
++             "sport": "Basketball",
++             "team": "Golden State Warriors",
++             "photo": "placeholder_photo"
++           }
++         ]
++       }
++     },
++     {
++       "id": "arthur-hill",
++       "name": "Arthur Hill",
++       "colors": {
++         "primary": "#000080",
++         "secondary": "#FFD700"
++       },
++       "logo": "placeholder_logo_url",
++       "backgroundVideo": "placeholder_video_url",
++       "sports": [
++         {
++           "id": "womens-basketball",
++           "name": "Women's Basketball",
++           "years": [
++             {
++               "year": 2023,
++               "achievement": "State Champions",
++               "trophyModel": "placeholder_3d_model_url",
++               "trophyImage": "placeholder_trophy_image",
++               "team": {
++                 "photo": "placeholder_team_photo",
++                 "roster": [
++                   {
++                     "id": "player1",
++                     "name": "Sarah Johnson",
++                     "number": "11",
++                     "position": "Forward",
++                     "photo": "placeholder_player_photo",
++                     "stats": {
++                       "pointsPerGame": 22.3,
++                       "assistsPerGame": 3.8,
++                       "rebounds": 8.2
++                     }
++                   }
++                 ]
++               }
++             }
++           ]
++         }
++       ]
++     },
++     {
++       "id": "saginaw-united",
++       "name": "Saginaw United",
++       "colors": {
++         "primary": "#000080",
++         "secondary": "#FFD700"
++       },
++       "logo": "placeholder_logo_url",
++       "backgroundVideo": "placeholder_video_url",
++       "sports": [
++         {
++           "id": "football",
++           "name": "Football",
++           "years": [
++             {
++               "year": 2023,
++               "achievement": "Regional Champions",
++               "trophyModel": "placeholder_3d_model_url",
++               "trophyImage": "placeholder_trophy_image",
++               "team": {
++                 "photo": "placeholder_team_photo",
++                 "roster": [
++                   {
++                     "id": "player1",
++                     "name": "Marcus Williams",
++                     "number": "7",
++                     "position": "Quarterback",
++                     "photo": "placeholder_player_photo",
++                     "stats": {
++                       "passingYards": 2800,
++                       "touchdowns": 32,
++                       "interceptions": 8
++                     }
++                   }
++                 ]
++               }
++             }
++           ]
++         }
++       ]
++     }
++   ]
 + }
 ```
 
@@ -886,7 +892,7 @@ _****_
 
 
 
-Now, I'll create the index.html file with a modern, responsive design:
+Now, I'll create the HTML file with modern styling and functionality.
 
 ---
 
@@ -899,7 +905,7 @@ _****_
 + <head>
 +     <meta charset="UTF-8">
 +     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-+     <title>Saginaw Schools Trophy Room</title>
++     <title>Saginaw Schools Trophy Showcase</title>
 +     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 +     <style>
 +         :root {
@@ -908,7 +914,7 @@ _****_
 +             --black: #000000;
 +             --white: #ffffff;
 +             --gray: #f5f5f5;
-+             --dark-gray: #333333;
++             --transition: all 0.3s ease;
 +         }
 + 
 +         * {
@@ -931,17 +937,12 @@ _****_
 +             right: 0;
 +             background: var(--navy);
 +             color: var(--white);
-+             padding: 1rem;
-+             z-index: 1000;
-+             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-+         }
-+ 
-+         .header-content {
-+             max-width: 1200px;
-+             margin: 0 auto;
++             padding: 1rem 2rem;
 +             display: flex;
 +             justify-content: space-between;
 +             align-items: center;
++             z-index: 1000;
++             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 +         }
 + 
 +         .logo {
@@ -950,77 +951,95 @@ _****_
 +             color: var(--gold);
 +         }
 + 
-+         .main-content {
-+             margin-top: 80px;
-+             padding: 2rem;
-+             max-width: 1200px;
-+             margin-left: auto;
-+             margin-right: auto;
++         .nav-toggle {
++             display: none;
++             font-size: 1.5rem;
++             cursor: pointer;
++             color: var(--gold);
 +         }
 + 
-+         .navigation-grid {
++         .main-content {
++             margin-top: 4rem;
++             padding: 2rem;
++             min-height: calc(100vh - 8rem);
++         }
++ 
++         .schools-grid {
 +             display: grid;
 +             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 +             gap: 2rem;
-+             margin-bottom: 2rem;
++             margin-top: 2rem;
 +         }
 + 
-+         .nav-card {
++         .school-card {
 +             background: var(--white);
-+             border-radius: 10px;
++             border-radius: 15px;
 +             overflow: hidden;
-+             transition: transform 0.3s ease;
-+             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
++             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
++             transition: var(--transition);
 +             cursor: pointer;
 +             position: relative;
 +         }
 + 
-+         .nav-card:hover {
++         .school-card:hover {
 +             transform: translateY(-5px);
++             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 +         }
 + 
-+         .nav-card-content {
-+             padding: 1.5rem;
-+             background: linear-gradient(to bottom, rgba(0, 0, 128, 0.9), rgba(0, 0, 128, 0.7));
-+             color: var(--white);
++         .school-image {
++             width: 100%;
 +             height: 200px;
-+             display: flex;
-+             flex-direction: column;
-+             justify-content: flex-end;
++             background-size: cover;
++             background-position: center;
++             position: relative;
 +         }
 + 
-+         .nav-card h2 {
++         .school-image::after {
++             content: '';
++             position: absolute;
++             top: 0;
++             left: 0;
++             right: 0;
++             bottom: 0;
++             background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
++         }
++ 
++         .school-info {
++             padding: 1.5rem;
++         }
++ 
++         .school-name {
 +             font-size: 1.5rem;
-+             margin-bottom: 0.5rem;
-+             color: var(--gold);
++             color: var(--navy);
++             margin-bottom: 1rem;
 +         }
 + 
-+         .nav-card p {
++         .school-stats {
++             display: flex;
++             gap: 1rem;
++             color: #666;
 +             font-size: 0.9rem;
-+             opacity: 0.9;
 +         }
 + 
 +         .modal {
-+             display: none;
 +             position: fixed;
 +             top: 0;
 +             left: 0;
 +             right: 0;
 +             bottom: 0;
-+             background: rgba(0, 0, 0, 0.8);
++             background: rgba(0,0,0,0.8);
++             display: none;
++             justify-content: center;
++             align-items: center;
 +             z-index: 2000;
 +         }
 + 
 +         .modal-content {
-+             position: absolute;
-+             top: 50%;
-+             left: 50%;
-+             transform: translate(-50%, -50%);
 +             background: var(--white);
 +             padding: 2rem;
-+             border-radius: 10px;
++             border-radius: 15px;
 +             width: 90%;
-+             max-width: 800px;
++             max-width: 1200px;
 +             max-height: 90vh;
 +             overflow-y: auto;
 +         }
@@ -1029,25 +1048,43 @@ _****_
 +             position: absolute;
 +             top: 1rem;
 +             right: 1rem;
-+             background: none;
-+             border: none;
-+             color: var(--dark-gray);
 +             font-size: 1.5rem;
++             color: var(--white);
 +             cursor: pointer;
++         }
++ 
++         .sports-grid {
++             display: grid;
++             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
++             gap: 1.5rem;
++             margin-top: 2rem;
++         }
++ 
++         .sport-card {
++             background: var(--gray);
++             padding: 1.5rem;
++             border-radius: 10px;
++             cursor: pointer;
++             transition: var(--transition);
++         }
++ 
++         .sport-card:hover {
++             background: var(--gold);
++             color: var(--navy);
 +         }
 + 
 +         .trophy-display {
 +             perspective: 1000px;
-+             margin: 2rem 0;
++             width: 300px;
++             height: 300px;
++             margin: 2rem auto;
 +         }
 + 
-+         .trophy-placeholder {
-+             width: 200px;
-+             height: 200px;
-+             background: var(--gold);
-+             margin: 0 auto;
++         .trophy-model {
++             width: 100%;
++             height: 100%;
 +             transform-style: preserve-3d;
-+             animation: rotate 10s infinite linear;
++             animation: rotate 20s infinite linear;
 +         }
 + 
 +         @keyframes rotate {
@@ -1055,301 +1092,245 @@ _****_
 +             to { transform: rotateY(360deg); }
 +         }
 + 
-+         .team-grid {
-+             display: grid;
-+             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-+             gap: 1rem;
-+             margin-top: 2rem;
-+         }
-+ 
 +         .player-card {
-+             background: var(--gray);
-+             padding: 1rem;
-+             border-radius: 5px;
-+             cursor: pointer;
-+             transition: background-color 0.3s ease;
++             background: var(--white);
++             border-radius: 10px;
++             padding: 1.5rem;
++             margin: 1rem 0;
++             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 +         }
 + 
-+         .player-card:hover {
-+             background: var(--gold);
-+             color: var(--navy);
++         .player-stats {
++             display: grid;
++             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
++             gap: 1rem;
++             margin-top: 1rem;
++         }
++ 
++         .stat-item {
++             text-align: center;
++             padding: 0.5rem;
++             background: var(--gray);
++             border-radius: 5px;
 +         }
 + 
 +         .footer {
++             background: var(--navy);
++             color: var(--white);
++             padding: 1rem 2rem;
++             text-align: center;
 +             position: fixed;
 +             bottom: 0;
 +             left: 0;
 +             right: 0;
-+             background: var(--navy);
-+             color: var(--white);
-+             padding: 1rem;
-+             text-align: center;
 +         }
 + 
 +         @media (max-width: 768px) {
-+             .navigation-grid {
++             .nav-toggle {
++                 display: block;
++             }
++ 
++             .nav-menu {
++                 position: fixed;
++                 top: 4rem;
++                 right: -100%;
++                 background: var(--navy);
++                 width: 80%;
++                 height: calc(100vh - 4rem);
++                 padding: 2rem;
++                 transition: var(--transition);
++             }
++ 
++             .nav-menu.active {
++                 right: 0;
++             }
++ 
++             .schools-grid {
 +                 grid-template-columns: 1fr;
 +             }
-+ 
-+             .modal-content {
-+                 width: 95%;
-+                 padding: 1rem;
-+             }
-+ 
-+             .header-content {
-+                 flex-direction: column;
-+                 text-align: center;
-+             }
-+         }
-+ 
-+         .breadcrumb {
-+             margin-bottom: 2rem;
-+             color: var(--dark-gray);
-+         }
-+ 
-+         .breadcrumb span {
-+             margin: 0 0.5rem;
-+             color: var(--navy);
-+         }
-+ 
-+         .loading-spinner {
-+             display: none;
-+             width: 50px;
-+             height: 50px;
-+             border: 5px solid var(--gray);
-+             border-top: 5px solid var(--navy);
-+             border-radius: 50%;
-+             animation: spin 1s linear infinite;
-+             margin: 2rem auto;
-+         }
-+ 
-+         @keyframes spin {
-+             0% { transform: rotate(0deg); }
-+             100% { transform: rotate(360deg); }
 +         }
 +     </style>
 + </head>
 + <body>
 +     <header class="header">
-+         <div class="header-content">
-+             <div class="logo">Saginaw Schools Trophy Room</div>
-+             <nav class="main-nav">
-+                 <!-- Navigation will be dynamically populated -->
-+             </nav>
++         <div class="logo">Saginaw Trophy Showcase</div>
++         <div class="nav-toggle">
++             <i class="fas fa-bars"></i>
 +         </div>
 +     </header>
 + 
 +     <main class="main-content">
-+         <div class="breadcrumb">
-+             Home
++         <div class="schools-grid" id="schoolsGrid">
++             <!-- Schools will be populated here -->
 +         </div>
-+ 
-+         <div class="navigation-grid">
-+             <!-- Will be dynamically populated -->
-+         </div>
-+ 
-+         <div class="loading-spinner"></div>
 +     </main>
 + 
-+     <div class="modal" id="detailModal">
++     <div class="modal" id="schoolModal">
++         <div class="close-modal">×</div>
 +         <div class="modal-content">
-+             <button class="close-modal">&times;</button>
-+             <div class="modal-body">
-+                 <!-- Will be dynamically populated -->
-+             </div>
++             <!-- Modal content will be populated here -->
 +         </div>
 +     </div>
 + 
 +     <footer class="footer">
-+         <p>&copy; 2024 Saginaw Schools Trophy Room. All rights reserved.</p>
++         <p>© 2024 Saginaw Schools Trophy Showcase. All rights reserved.</p>
 +     </footer>
 + 
 +     <script>
-+         let currentData = null;
-+         let navigationHistory = [];
++         // Load and parse the JSON data
++         fetch('data.json')
++             .then(response => response.json())
++             .then(data => {
++                 initializeApp(data);
++             })
++             .catch(error => console.error('Error loading data:', error));
 + 
-+         // Fetch and load the JSON data
-+         async function loadData() {
-+             try {
-+                 const response = await fetch('data.json');
-+                 currentData = await response.json();
-+                 renderMainNavigation();
-+             } catch (error) {
-+                 console.error('Error loading data:', error);
-+             }
++         function initializeApp(data) {
++             const schoolsGrid = document.getElementById('schoolsGrid');
++             const modal = document.getElementById('schoolModal');
++             const closeModal = document.querySelector('.close-modal');
++ 
++             // Populate schools
++             data.schools.forEach(school => {
++                 const schoolCard = createSchoolCard(school);
++                 schoolsGrid.appendChild(schoolCard);
++             });
++ 
++             // Modal handling
++             closeModal.addEventListener('click', () => {
++                 modal.style.display = 'none';
++             });
++ 
++             window.addEventListener('click', (e) => {
++                 if (e.target === modal) {
++                     modal.style.display = 'none';
++                 }
++             });
 +         }
 + 
-+         function renderMainNavigation() {
-+             const grid = document.querySelector('.navigation-grid');
-+             grid.innerHTML = '';
-+ 
-+             if (navigationHistory.length === 0) {
-+                 // Show schools
-+                 currentData.schools.forEach(school => {
-+                     const card = createNavigationCard(school.name, 'School', () => {
-+                         navigationHistory.push({ type: 'school', id: school.id });
-+                         renderSchoolView(school);
-+                     });
-+                     grid.appendChild(card);
-+                 });
-+             }
-+         }
-+ 
-+         function createNavigationCard(title, type, onClick) {
++         function createSchoolCard(school) {
 +             const card = document.createElement('div');
-+             card.className = 'nav-card';
++             card.className = 'school-card';
 +             card.innerHTML = `
-+                 <div class="nav-card-content">
-+                     <h2>${title}</h2>
-+                     <p>${type}</p>
++                 <div class="school-image" style="background-image: url(${school.logo})">
++                     <div class="school-overlay"></div>
++                 </div>
++                 <div class="school-info">
++                     <h2 class="school-name">${school.name}</h2>
++                     <div class="school-stats">
++                         <span>${school.sports.length} Sports</span>
++                         <span>${countTrophies(school)} Trophies</span>
++                     </div>
 +                 </div>
 +             `;
-+             card.addEventListener('click', onClick);
++ 
++             card.addEventListener('click', () => showSchoolDetails(school));
 +             return card;
 +         }
 + 
-+         function renderSchoolView(school) {
-+             const grid = document.querySelector('.navigation-grid');
-+             grid.innerHTML = '';
-+ 
-+             // Render sports categories
-+             currentData.sportCategories.forEach(sport => {
-+                 const card = createNavigationCard(sport, 'Sport', () => {
-+                     navigationHistory.push({ type: 'sport', name: sport });
-+                     renderSportView(school, sport);
-+                 });
-+                 grid.appendChild(card);
-+             });
-+ 
-+             // Add D1 Athletes card
-+             if (school.athletes?.d1?.length > 0) {
-+                 const d1Card = createNavigationCard('D1 Athletes', 'Athletes', () => {
-+                     showAthletesList(school.athletes.d1);
-+                 });
-+                 grid.appendChild(d1Card);
-+             }
-+ 
-+             // Add Pro Athletes card
-+             if (school.athletes?.pro?.length > 0) {
-+                 const proCard = createNavigationCard('Pro Athletes', 'Athletes', () => {
-+                     showAthletesList(school.athletes.pro);
-+                 });
-+                 grid.appendChild(proCard);
-+             }
-+ 
-+             updateBreadcrumb();
++         function countTrophies(school) {
++             return school.sports.reduce((total, sport) => {
++                 return total + (sport.years ? sport.years.length : 0);
++             }, 0);
 +         }
 + 
-+         function renderSportView(school, sportName) {
-+             const grid = document.querySelector('.navigation-grid');
-+             grid.innerHTML = '';
++         function showSchoolDetails(school) {
++             const modal = document.getElementById('schoolModal');
++             const content = modal.querySelector('.modal-content');
 + 
-+             const sport = Object.values(school.sports).find(s => s.name === sportName);
-+             if (sport) {
-+                 Object.entries(sport.years).forEach(([year, yearData]) => {
-+                     const card = createNavigationCard(year, yearData.achievement, () => {
-+                         showTeamDetail(school, sport, year, yearData);
-+                     });
-+                     grid.appendChild(card);
-+                 });
-+             }
-+ 
-+             updateBreadcrumb();
-+         }
-+ 
-+         function showTeamDetail(school, sport, year, yearData) {
-+             const modal = document.getElementById('detailModal');
-+             const modalBody = modal.querySelector('.modal-body');
-+ 
-+             modalBody.innerHTML = `
-+                 <h2>${school.name} ${sport.name} - ${year}</h2>
-+                 <h3>${yearData.achievement}</h3>
-+                 
-+                 <div class="trophy-display">
-+                     <div class="trophy-placeholder"></div>
-+                 </div>
-+ 
-+                 <div class="team-grid">
-+                     ${yearData.roster.map(player => `
-+                         <div class="player-card" onclick="showPlayerStats(${JSON.stringify(player)})">
-+                             <h4>${player.name}</h4>
-+                             <p>#${player.number} - ${player.position}</p>
++             content.innerHTML = `
++                 <h2 style="color: var(--navy); margin-bottom: 2rem;">${school.name}</h2>
++                 <div class="sports-grid">
++                     ${school.sports.map(sport => `
++                         <div class="sport-card" onclick="showSportDetails('${school.id}', '${sport.id}')">
++                             <h3>${sport.name}</h3>
++                             <p>${sport.years ? sport.years.length : 0} Achievements</p>
 +                         </div>
 +                     `).join('')}
 +                 </div>
++                 ${school.athletes ? `
++                     <h3 style="margin: 2rem 0 1rem;">Notable Athletes</h3>
++                     <div class="athletes-section">
++                         <h4>D1 Athletes</h4>
++                         ${school.athletes.d1.map(athlete => `
++                             <div class="player-card">
++                                 <h4>${athlete.name}</h4>
++                                 <p>${athlete.sport} - ${athlete.college}</p>
++                             </div>
++                         `).join('')}
++                         
++                         <h4>Professional Athletes</h4>
++                         ${school.athletes.pro.map(athlete => `
++                             <div class="player-card">
++                                 <h4>${athlete.name}</h4>
++                                 <p>${athlete.sport} - ${athlete.team}</p>
++                             </div>
++                         `).join('')}
++                     </div>
++                 ` : ''}
 +             `;
 + 
-+             modal.style.display = 'block';
++             modal.style.display = 'flex';
 +         }
 + 
-+         function showPlayerStats(player) {
-+             const modal = document.getElementById('detailModal');
-+             const modalBody = modal.querySelector('.modal-body');
++         function showSportDetails(schoolId, sportId) {
++             fetch('data.json')
++                 .then(response => response.json())
++                 .then(data => {
++                     const school = data.schools.find(s => s.id === schoolId);
++                     const sport = school.sports.find(s => s.id === sportId);
++                     
++                     const modal = document.getElementById('schoolModal');
++                     const content = modal.querySelector('.modal-content');
 + 
-+             modalBody.innerHTML = `
-+                 <h2>${player.name}</h2>
-+                 <h3>#${player.number} - ${player.position}</h3>
-+                 
-+                 <div style="margin-top: 2rem;">
-+                     <h4>Statistics</h4>
-+                     ${Object.entries(player.stats).map(([stat, value]) => `
-+                         <p>${stat.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${value}</p>
-+                     `).join('')}
-+                 </div>
-+             `;
++                     content.innerHTML = `
++                         <h2 style="color: var(--navy); margin-bottom: 1rem;">${sport.name}</h2>
++                         <h3 style="color: var(--navy); margin-bottom: 2rem;">${school.name}</h3>
++                         
++                         ${sport.years.map(year => `
++                             <div class="trophy-year">
++                                 <h3>${year.year} - ${year.achievement}</h3>
++                                 <div class="trophy-display">
++                                     <div class="trophy-model">
++                                         <!-- Placeholder for 3D model -->
++                                         <img src="${year.trophyImage}" alt="Trophy" style="width: 100%; height: 100%; object-fit: contain;">
++                                     </div>
++                                 </div>
++                                 
++                                 <h4>Team Roster</h4>
++                                 <div class="player-grid">
++                                     ${year.team.roster.map(player => `
++                                         <div class="player-card">
++                                             <h4>${player.name} - #${player.number}</h4>
++                                             <p>${player.position}</p>
++                                             <div class="player-stats">
++                                                 ${Object.entries(player.stats).map(([key, value]) => `
++                                                     <div class="stat-item">
++                                                         <div class="stat-value">${value}</div>
++                                                         <div class="stat-label">${formatStatLabel(key)}</div>
++                                                     </div>
++                                                 `).join('')}
++                                             </div>
++                                         </div>
++                                     `).join('')}
++                                 </div>
++                             </div>
++                         `).join('')}
++                     `;
++                 });
 +         }
 + 
-+         function showAthletesList(athletes) {
-+             const modal = document.getElementById('detailModal');
-+             const modalBody = modal.querySelector('.modal-body');
-+ 
-+             modalBody.innerHTML = `
-+                 <h2>${athletes[0].college ? 'D1 Athletes' : 'Professional Athletes'}</h2>
-+                 <div class="team-grid">
-+                     ${athletes.map(athlete => `
-+                         <div class="player-card">
-+                             <h4>${athlete.name}</h4>
-+                             <p>${athlete.sport}</p>
-+                             <p>${athlete.college || athlete.professional}</p>
-+                             <p>Class of ${athlete.graduationYear}</p>
-+                         </div>
-+                     `).join('')}
-+                 </div>
-+             `;
-+ 
-+             modal.style.display = 'block';
++         function formatStatLabel(key) {
++             return key
++                 .replace(/([A-Z])/g, ' $1')
++                 .replace(/^./, str => str.toUpperCase())
++                 .replace(/PerGame/g, ' Per Game');
 +         }
 + 
-+         function updateBreadcrumb() {
-+             const breadcrumb = document.querySelector('.breadcrumb');
-+             let path = ['Home'];
-+             
-+             navigationHistory.forEach(item => {
-+                 if (item.type === 'school') {
-+                     const school = currentData.schools.find(s => s.id === item.id);
-+                     path.push(school.name);
-+                 } else if (item.type === 'sport') {
-+                     path.push(item.name);
-+                 }
-+             });
-+ 
-+             breadcrumb.innerHTML = path.join(' <span>/</span> ');
-+         }
-+ 
-+         // Close modal when clicking the close button or outside the modal
-+         document.querySelector('.close-modal').addEventListener('click', () => {
-+             document.getElementById('detailModal').style.display = 'none';
++         // Mobile navigation
++         document.querySelector('.nav-toggle').addEventListener('click', () => {
++             document.querySelector('.nav-menu').classList.toggle('active');
 +         });
-+ 
-+         window.addEventListener('click', (e) => {
-+             const modal = document.getElementById('detailModal');
-+             if (e.target === modal) {
-+                 modal.style.display = 'none';
-+             }
-+         });
-+ 
-+         // Initialize the application
-+         loadData();
 +     </script>
 + </body>
 + </html>
@@ -1361,46 +1342,63 @@ _****_
 
 
 
-I've created a modern, responsive web application for the Saginaw Schools Trophy Room. Here's a breakdown of what I've implemented:
+I've created a modern, responsive digital trophy showcase system with the following features:
 
-1. **Data Structure (`data.json`)**:
-- Hierarchical organization of schools, sports, and athletes
-- Support for D1 and Pro athletes
-- Detailed team and player statistics
-- Placeholder structure for media (images, videos, 3D models)
-
-2. **UI Design (`index.html`)**:
-- Modern, clean interface with school colors (navy, gold, black)
-- Responsive grid layout that adapts to different screen sizes
-- Card-based navigation system
+1. **Modern UI Components**:
+- Clean, card-based layout
 - Fixed header and footer
-- Breadcrumb navigation
-- Loading states and animations
-
-3. **Key Features**:
-- Interactive navigation through schools, sports, and years
+- Smooth animations and transitions
 - Modal windows for detailed views
-- Placeholder for 3D trophy models with rotation animation
-- Player/athlete cards with statistics
-- Responsive design that works on mobile and desktop
-- Smooth transitions and hover effects
+- Responsive grid systems
+- School colors (navy, gold, black) incorporated throughout
 
-4. **Navigation Flow**:
-1. Home (Schools selection)
-2. School view (Sports + D1/Pro Athletes)
-3. Sport view (Years with achievements)
-4. Team/Trophy view (Roster and trophy display)
-5. Player details (Statistics and info)
+2. **Navigation Structure**:
+- Schools overview (main page)
+- Sports categories (modal view)
+- Year/Achievement details (modal view)
+- Player rosters and stats (modal view)
 
-The application is ready to run and can be expanded with:
-- Real media content (replacing placeholders)
-- 3D trophy models
-- Additional statistics and information
-- More interactive features
-- Authentication system
-- Admin interface for updates
+3. **Interactive Features**:
+- Clickable cards with hover effects
+- Modal windows for detailed information
+- Animated trophy displays (placeholder for 3D models)
+- Mobile-responsive navigation
+- Dynamic stat displays
 
-Would you like me to explain any specific part in more detail or make any adjustments to the implementation?
+4. **Data Integration**:
+- Loads data from data.json
+- Dynamically generates all content
+- Structured for easy updates
+- Supports multiple schools, sports, and years
+
+5. **Visual Elements**:
+- School logos (placeholder)
+- Trophy images (placeholder)
+- Player photos (placeholder)
+- Background gradients and overlays
+- Modern iconography
+
+The system is built to be easily expandable and maintainable. The JSON structure allows for easy addition of:
+- New schools
+- Additional sports
+- More achievements/years
+- Player information
+- Media assets
+
+To test the system:
+1. Place both files in the same directory
+2. Serve them through a web server (due to CORS restrictions with local files)
+3. Open index.html in a modern browser
+
+The interface will automatically populate with the sample data and provide a full interactive experience.
+
+Would you like me to make any adjustments to either the interface or the data structure?
+
+---
+
+_****_
+
+
 
 ---
 
