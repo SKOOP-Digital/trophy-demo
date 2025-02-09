@@ -1418,258 +1418,198 @@ Let me analyze the best options for implementing a 3D object viewer:
 - Support for 3D model formats
 - Good performance
 - Mobile-friendly
-- No server-side requirements
+- No server-side dependencies
 
-2. Available Technologies:
+2. Main Technology Options:
 a) Three.js
   Pros:
-  - Most popular 3D library for web
-  - Extensive documentation and examples
-  - Supports multiple 3D formats (GLTF, OBJ, FBX, etc.)
+  - Most popular 3D web library
+  - Extensive documentation
   - Large community
+  - Supports multiple 3D formats
   - Good performance
   - Mobile support
   Cons:
   - Larger file size
-  - Learning curve for advanced features
+  - More complex API
 
 b) Babylon.js
   Pros:
-  - Powerful engine
   - Good documentation
+  - Microsoft-backed
+  - High performance
   Cons:
-  - More complex than needed
-  - Larger footprint
+  - Heavier than needed
+  - Learning curve
+  - More suited for games
 
 c) Model-viewer Web Component
   Pros:
-  - Very simple implementation
+  - Extremely simple to implement
+  - Google-backed
   - Built-in controls
-  - Supports GLTF/GLB
-  - Maintained by Google
+  - Mobile-friendly
+  - Lightweight
+  - Supports glTF/GLB formats
   Cons:
-  - Limited customization
-  - Only supports GLTF/GLB
+  - Less customizable
+  - Limited to glTF/GLB
 
 3. Format Considerations:
-- GLTF/GLB: Modern, efficient, widely supported
+- glTF/GLB: Modern, efficient, web-optimized
 - OBJ: Simple but larger file size
-- FBX: Good but proprietary
-- STL: Common for 3D printing but limited features
+- FBX: Proprietary, not ideal for web
+- USDZ: Apple-specific
 
 4. Analysis:
-For this specific use case (trophy viewer):
-- Need simple rotation controls
-- Don't need complex animations
-- Want good mobile support
-- Need easy implementation
-- Want good performance
+For this specific use case, the model-viewer web component appears to be the best fit because:
+- Simplest implementation
+- Built-in rotation controls
+- Mobile-friendly out of the box
+- Perfect for simple model viewing
+- glTF format is ideal for web use
+- Minimal code required
 
-5. Recommendation:
-Three.js with GLTF format because:
-- Simpler than full game engines
-- Well documented
-- Perfect for this use case
-- Can be implemented with minimal code
-- GLTF format is efficient and well-supported
-- Large community for support
-- Can be extended later if needed
-
-Let me proceed with implementing a basic Three.js viewer.
+5. Implementation Plan:
+1. Add model-viewer script
+2. Create viewer component
+3. Add basic controls
+4. Style to match existing design
+5. Add loading states
 ```
 
-I'll create a simple implementation using Three.js. First, let's modify the HTML to add the necessary dependencies and create a test viewer.
+Based on this analysis, I'll implement a solution using Google's `<model-viewer>` web component, which is perfect for this use case. Let me update the HTML file to include this functionality.
 
 ---
 
 _****_
 
 ```diff
-      <title>Saginaw Schools Trophy Room</title>
+      <title>Saginaw Schools Trophy Showcase</title>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-+     <!-- Add Three.js and GLTFLoader -->
-+     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-+     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-+     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
++     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
       <style>
           :root {
-              perspective: 1000px;
-              margin: 2rem 0;
+  
+          .trophy-display {
+-             perspective: 1000px;
+-             width: 300px;
+-             height: 300px;
 +             width: 100%;
 +             height: 400px;
-+             position: relative;
+              margin: 2rem auto;
++             background: var(--gray);
++             border-radius: 15px;
++             overflow: hidden;
           }
   
--         .trophy-placeholder {
--             width: 200px;
--             height: 200px;
-+         .trophy-container {
-+             width: 100%;
-+             height: 100%;
-+             position: relative;
-+         }
-+ 
-+         #trophy-canvas {
-+             width: 100%;
-+             height: 100%;
-+             outline: none;
+-         .trophy-model {
++         model-viewer {
+              width: 100%;
+              height: 100%;
+-             transform-style: preserve-3d;
+-             animation: rotate 20s infinite linear;
++             --poster-color: transparent;
++             --progress-bar-color: var(--gold);
++             --progress-bar-height: 2px;
 +         }
 + 
 +         .trophy-controls {
-+             position: absolute;
-+             bottom: 10px;
-+             left: 50%;
-+             transform: translateX(-50%);
 +             display: flex;
-+             gap: 10px;
-+             background: rgba(0, 0, 0, 0.5);
-+             padding: 10px;
-+             border-radius: 20px;
-+             z-index: 1;
-+         }
-+ 
-+         .trophy-control-btn {
-              background: var(--gold);
--             margin: 0 auto;
--             transform-style: preserve-3d;
--             animation: rotate 10s infinite linear;
-+             border: none;
-+             color: var(--navy);
-+             width: 40px;
-+             height: 40px;
-+             border-radius: 50%;
-+             cursor: pointer;
-+             display: flex;
-+             align-items: center;
 +             justify-content: center;
-+             transition: background-color 0.3s;
++             gap: 1rem;
++             margin-top: 1rem;
           }
   
 -         @keyframes rotate {
 -             from { transform: rotateY(0deg); }
 -             to { transform: rotateY(360deg); }
-+         .trophy-control-btn:hover {
-+             background: var(--white);
-          }
-  
-          }
-  
-+         // Trophy viewer class
-+         class TrophyViewer {
-+             constructor(containerId) {
-+                 this.container = document.getElementById(containerId);
-+                 this.scene = new THREE.Scene();
-+                 this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
-+                 
-+                 // Set up renderer
-+                 this.renderer = new THREE.WebGLRenderer({ antialias: true });
-+                 this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-+                 this.renderer.setClearColor(0xf5f5f5);
-+                 this.container.appendChild(this.renderer.domElement);
-+ 
-+                 // Set up camera position
-+                 this.camera.position.z = 5;
-+ 
-+                 // Add lights
-+                 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-+                 this.scene.add(ambientLight);
-+ 
-+                 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-+                 directionalLight.position.set(5, 5, 5);
-+                 this.scene.add(directionalLight);
-+ 
-+                 // Add controls
-+                 this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-+                 this.controls.enableDamping = true;
-+                 this.controls.dampingFactor = 0.05;
-+                 this.controls.screenSpacePanning = false;
-+                 this.controls.minDistance = 3;
-+                 this.controls.maxDistance = 10;
-+ 
-+                 // Handle window resize
-+                 window.addEventListener('resize', () => this.onWindowResize(), false);
-+ 
-+                 // Start animation loop
-+                 this.animate();
-+             }
-+ 
-+             loadModel(url) {
-+                 const loader = new THREE.GLTFLoader();
-+                 loader.load(
-+                     url,
-+                     (gltf) => {
-+                         // Clear existing model if any
-+                         while(this.scene.children.length > 0){ 
-+                             this.scene.remove(this.scene.children[0]); 
-+                         }
-+ 
-+                         // Add new model
-+                         this.scene.add(gltf.scene);
-+ 
-+                         // Center and scale model
-+                         const box = new THREE.Box3().setFromObject(gltf.scene);
-+                         const center = box.getCenter(new THREE.Vector3());
-+                         const size = box.getSize(new THREE.Vector3());
-+ 
-+                         const maxDim = Math.max(size.x, size.y, size.z);
-+                         const scale = 3 / maxDim;
-+                         gltf.scene.scale.set(scale, scale, scale);
-+ 
-+                         gltf.scene.position.x = -center.x * scale;
-+                         gltf.scene.position.y = -center.y * scale;
-+                         gltf.scene.position.z = -center.z * scale;
-+ 
-+                         // Reset controls
-+                         this.controls.reset();
-+                     },
-+                     (xhr) => {
-+                         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-+                     },
-+                     (error) => {
-+                         console.error('Error loading model:', error);
-+                     }
-+                 );
-+             }
-+ 
-+             onWindowResize() {
-+                 this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
-+                 this.camera.updateProjectionMatrix();
-+                 this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-+             }
-+ 
-+             animate() {
-+                 requestAnimationFrame(() => this.animate());
-+                 this.controls.update();
-+                 this.renderer.render(this.scene, this.camera);
-+             }
++         .trophy-control-btn {
++             background: var(--navy);
++             color: var(--gold);
++             border: none;
++             padding: 0.5rem 1rem;
++             border-radius: 5px;
++             cursor: pointer;
++             transition: var(--transition);
 +         }
 + 
-+         // Modified showTeamDetail function to use the 3D viewer
-          function showTeamDetail(school, sport, year, yearData) {
-              const modal = document.getElementById('detailModal');
-                  
-                  <div class="trophy-display">
--                     <div class="trophy-placeholder"></div>
-+                     <div id="trophy-container" class="trophy-container"></div>
-+                     <div class="trophy-controls">
-+                         <button class="trophy-control-btn" onclick="viewer.controls.reset()">
-+                             <i class="fas fa-sync-alt"></i>
-+                         </button>
-+                     </div>
-                  </div>
-  
-  
-              modal.style.display = 'block';
++         .trophy-control-btn:hover {
++             background: var(--gold);
++             color: var(--navy);
++         }
 + 
-+             // Initialize the trophy viewer after the modal is shown
-+             setTimeout(() => {
-+                 window.viewer = new TrophyViewer('trophy-container');
-+                 if (yearData.trophyModel) {
-+                     viewer.loadModel(yearData.trophyModel);
-+                 }
-+             }, 100);
++         .trophy-loading {
++             display: flex;
++             justify-content: center;
++             align-items: center;
++             height: 100%;
++             color: var(--navy);
           }
   
+                                  <h3>${year.year} - ${year.achievement}</h3>
+                                  <div class="trophy-display">
+-                                     <div class="trophy-model">
+-                                         <!-- Placeholder for 3D model -->
+-                                         <img src="${year.trophyImage}" alt="Trophy" style="width: 100%; height: 100%; object-fit: contain;">
++                                     <model-viewer
++                                         src="${year.trophyModel}"
++                                         alt="3D Trophy Model"
++                                         auto-rotate
++                                         camera-controls
++                                         touch-action="pan-y"
++                                         loading="lazy"
++                                         camera-orbit="0deg 75deg 105%"
++                                         min-camera-orbit="auto auto 50%"
++                                         max-camera-orbit="auto auto 150%"
++                                         rotation-per-second="30deg"
++                                         interaction-prompt="none"
++                                     >
++                                         <div class="trophy-loading" slot="poster">
++                                             <i class="fas fa-trophy fa-3x fa-spin"></i>
++                                         </div>
++                                     </model-viewer>
+                                  </div>
++                                 <div class="trophy-controls">
++                                     <button class="trophy-control-btn" onclick="toggleAutoRotate(this)">
++                                         <i class="fas fa-sync-alt"></i> Toggle Rotation
++                                     </button>
++                                     <button class="trophy-control-btn" onclick="resetView(this)">
++                                         <i class="fas fa-undo"></i> Reset View
++                                     </button>
+                                  </div>
+                                  
+                          `).join('')}
+                      `;
++ 
++                     // Initialize trophy controls
++                     initializeTrophyControls();
++                 });
++         }
++ 
++         function toggleAutoRotate(button) {
++             const modelViewer = button.closest('.trophy-year').querySelector('model-viewer');
++             modelViewer.autoRotate = !modelViewer.autoRotate;
++         }
++ 
++         function resetView(button) {
++             const modelViewer = button.closest('.trophy-year').querySelector('model-viewer');
++             modelViewer.cameraOrbit = "0deg 75deg 105%";
++             modelViewer.cameraTarget = "0m 0m 0m";
++             modelViewer.fieldOfView = "45deg";
++         }
++ 
++         function initializeTrophyControls() {
++             // Add any additional initialization for trophy controls here
++             document.querySelectorAll('model-viewer').forEach(viewer => {
++                 viewer.addEventListener('load', () => {
++                     const loadingElement = viewer.querySelector('.trophy-loading');
++                     if (loadingElement) {
++                         loadingElement.style.display = 'none';
++                     }
++                 });
+              });
+          }
 ```
 
 ---
@@ -1678,104 +1618,55 @@ _****_
 
 
 
-I've implemented a 3D trophy viewer using Three.js with the following features:
+I've implemented a 3D trophy viewer using Google's `<model-viewer>` web component. Here's what I've added:
 
-1. **Interactive Controls**:
-- Orbit controls for rotating the trophy
-- Mouse/touch drag to rotate
-- Scroll/pinch to zoom
-- Reset button to return to default view
+1. **3D Viewer Integration**:
+- Added the model-viewer script from Google's CDN
+- Replaced the simple rotating image with an interactive 3D viewer
+- Added support for glTF/GLB 3D models
 
-2. **Technical Features**:
-- Automatic model centering and scaling
-- Proper lighting setup (ambient + directional)
-- Responsive design
-- Smooth animations
-- Anti-aliasing for better quality
-- Proper cleanup when switching models
+2. **Features**:
+- Auto-rotation with toggle control
+- Camera controls for manual rotation/zoom
+- Touch support for mobile devices
+- Loading indicator
+- View reset functionality
+- Smooth transitions
+- Responsive sizing
 
-3. **Format Support**:
-- Uses GLTF/GLB format which is:
-  - Efficient for web use
-  - Supports materials and textures
-  - Industry standard
-  - Good compression
+3. **Controls**:
+- Toggle auto-rotation button
+- Reset view button
+- Touch/mouse drag to rotate
+- Pinch/scroll to zoom
 
-4. **User Experience**:
-- Smooth controls with damping
-- Proper lighting to show details
-- Zoom limits to prevent getting too close/far
-- Loading progress indicator
-- Error handling
+4. **Styling**:
+- Matches the existing design language
+- Uses the navy/gold color scheme
+- Responsive layout
+- Loading animation
 
-To use this viewer, you'll need to:
+The model-viewer expects 3D models in glTF/GLB format, which is the standard for web 3D content. For the trophy models, you'll need to:
 
-1. Create GLTF/GLB format trophy models
-2. Host them somewhere accessible (like S3)
-3. Update the `trophyModel` URLs in your JSON data
+1. Convert your 3D trophy models to glTF or GLB format
+2. Update the `trophyModel` URLs in the JSON to point to these files
+3. Host the model files alongside your HTML/JSON files
 
-For testing, you can use a sample GLTF model. Would you like me to:
-1. Provide a sample GLTF trophy model for testing?
-2. Add more controls or features to the viewer?
-3. Make any adjustments to the current implementation?
-
-The current implementation is production-ready and should work well with any properly formatted GLTF/GLB models. The viewer is also mobile-friendly and should work well on all modern browsers.
-
----
-
-_**User**_
-
-Ok, create one of the trophys and store the GLTF code as a new file in the repo, and make sure everything is properly set up.
-
----
-
-_**Assistant**_
-
-```thinking
-Let me break down the task:
-
-1. Create a basic trophy model:
-- Should be simple but recognizable
-- Include basic materials (gold/silver)
-- Keep file size reasonable
-- Use proper scale and orientation
-
-2. Format considerations:
-- Need to create as GLB/GLTF
-- Include all necessary textures/materials
-- Ensure proper export settings
-- Keep file size optimized
-
-3. Implementation steps:
-1. Create trophy model code
-2. Save as GLTF file
-3. Update data.json to point to it
-4. Test in viewer
-5. Add loading indicator
-6. Add fallback if model fails
-
-4. Trophy design:
-- Classic trophy cup style
-- Base + stem + bowl
-- Simple geometry for good performance
-- Gold material for visual appeal
-
-Let me proceed with creating the trophy model.
+Example GLB model URL structure in the JSON:
+```json
+"trophyModel": "models/district_trophy.glb"
 ```
 
-First, I'll create a basic trophy model using Three.js geometry and export it as a GLTF file. I'll create this in a new file called `trophy.gltf`:
+To create the 3D models, you can:
+1. Use Blender to create/convert models to glTF/GLB
+2. Use online 3D model converters
+3. Purchase pre-made trophy models in glTF/GLB format
 
----
-
-_****_
-
-
-
----
-
-_****_
-
-
+Would you like me to:
+1. Add any additional features to the 3D viewer?
+2. Create a sample 3D trophy model?
+3. Add more controls or viewing options?
+4. Modify the styling or layout?
 
 ---
 

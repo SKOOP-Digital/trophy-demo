@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saginaw Schools Trophy Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Add Three.js and GLTFLoader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
         :root {
             --navy: #000080;
@@ -147,52 +143,20 @@
         .trophy-display {
             perspective: 1000px;
             margin: 2rem 0;
-            width: 100%;
-            height: 400px;
-            position: relative;
         }
 
-        .trophy-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        #trophy-canvas {
-            width: 100%;
-            height: 100%;
-            outline: none;
-        }
-
-        .trophy-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 20px;
-            z-index: 1;
-        }
-
-        .trophy-control-btn {
+        .trophy-placeholder {
+            width: 200px;
+            height: 200px;
             background: var(--gold);
-            border: none;
-            color: var(--navy);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            animation: rotate 10s infinite linear;
         }
 
-        .trophy-control-btn:hover {
-            background: var(--white);
+        @keyframes rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
         }
 
         .team-grid {
@@ -267,27 +231,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .trophy-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .trophy-error {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #ff0000;
-            background: rgba(255, 0, 0, 0.1);
-            padding: 1rem;
-            border-radius: 5px;
-            width: 80%;
-        }
     </style>
 </head>
 <body>
@@ -334,27 +277,18 @@
             try {
                 const response = await fetch('data.json');
                 currentData = await response.json();
-                if (!currentData || !currentData.schools || !currentData.sportCategories) {
-                    throw new Error('Invalid data structure');
-                }
                 renderMainNavigation();
             } catch (error) {
                 console.error('Error loading data:', error);
-                document.querySelector('.navigation-grid').innerHTML = `
-                    <div style="text-align: center; color: var(--dark-gray);">
-                        <h2>Error loading data</h2>
-                        <p>Please try refreshing the page</p>
-                    </div>
-                `;
             }
         }
 
         function renderMainNavigation() {
             const grid = document.querySelector('.navigation-grid');
-            if (!grid) return;
             grid.innerHTML = '';
 
-            if (navigationHistory.length === 0 && currentData?.schools) {
+            if (navigationHistory.length === 0) {
+                // Show schools
                 currentData.schools.forEach(school => {
                     const card = createNavigationCard(school.name, 'School', () => {
                         navigationHistory.push({ type: 'school', id: school.id });
@@ -380,7 +314,6 @@
 
         function renderSchoolView(school) {
             const grid = document.querySelector('.navigation-grid');
-            if (!grid || !currentData?.sportCategories) return;
             grid.innerHTML = '';
 
             // Render sports categories
@@ -393,7 +326,7 @@
             });
 
             // Add D1 Athletes card
-            if (school?.athletes?.d1?.length > 0) {
+            if (school.athletes?.d1?.length > 0) {
                 const d1Card = createNavigationCard('D1 Athletes', 'Athletes', () => {
                     showAthletesList(school.athletes.d1);
                 });
@@ -401,7 +334,7 @@
             }
 
             // Add Pro Athletes card
-            if (school?.athletes?.pro?.length > 0) {
+            if (school.athletes?.pro?.length > 0) {
                 const proCard = createNavigationCard('Pro Athletes', 'Athletes', () => {
                     showAthletesList(school.athletes.pro);
                 });
@@ -428,137 +361,6 @@
             updateBreadcrumb();
         }
 
-        // Trophy viewer class
-        class TrophyViewer {
-            constructor(containerId) {
-                this.container = document.getElementById(containerId);
-                this.setupLoadingState();
-                this.scene = new THREE.Scene();
-                this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
-                
-                // Set up renderer
-                this.renderer = new THREE.WebGLRenderer({ antialias: true });
-                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-                this.renderer.setClearColor(0xf5f5f5);
-                this.container.appendChild(this.renderer.domElement);
-
-                // Set up camera position
-                this.camera.position.z = 5;
-
-                // Add lights
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                this.scene.add(ambientLight);
-
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                directionalLight.position.set(5, 5, 5);
-                this.scene.add(directionalLight);
-
-                // Add controls
-                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-                this.controls.enableDamping = true;
-                this.controls.dampingFactor = 0.05;
-                this.controls.screenSpacePanning = false;
-                this.controls.minDistance = 3;
-                this.controls.maxDistance = 10;
-
-                // Handle window resize
-                window.addEventListener('resize', () => this.onWindowResize(), false);
-
-                // Start animation loop
-                this.animate();
-            }
-
-            setupLoadingState() {
-                this.loadingElement = document.createElement('div');
-                this.loadingElement.className = 'trophy-loading';
-                this.loadingElement.innerHTML = `
-                    <div class="loading-spinner"></div>
-                    <p>Loading trophy model...</p>
-                `;
-                this.container.appendChild(this.loadingElement);
-            }
-
-            showError(message) {
-                const errorElement = document.createElement('div');
-                errorElement.className = 'trophy-error';
-                errorElement.innerHTML = `
-                    <h3>Error Loading Trophy</h3>
-                    <p>${message}</p>
-                    <p>Please try refreshing the page</p>
-                `;
-                this.container.appendChild(errorElement);
-            }
-
-            loadModel(url) {
-                this.loadingElement.style.display = 'block';
-                
-                const loader = new THREE.GLTFLoader();
-                loader.load(
-                    url,
-                    (gltf) => {
-                        this.loadingElement.style.display = 'none';
-                        
-                        // Clear existing model if any
-                        while(this.scene.children.length > 0){ 
-                            this.scene.remove(this.scene.children[0]); 
-                        }
-
-                        // Add lights back
-                        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                        this.scene.add(ambientLight);
-
-                        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                        directionalLight.position.set(5, 5, 5);
-                        this.scene.add(directionalLight);
-
-                        // Add new model
-                        this.scene.add(gltf.scene);
-
-                        // Center and scale model
-                        const box = new THREE.Box3().setFromObject(gltf.scene);
-                        const center = box.getCenter(new THREE.Vector3());
-                        const size = box.getSize(new THREE.Vector3());
-
-                        const maxDim = Math.max(size.x, size.y, size.z);
-                        const scale = 3 / maxDim;
-                        gltf.scene.scale.set(scale, scale, scale);
-
-                        gltf.scene.position.x = -center.x * scale;
-                        gltf.scene.position.y = -center.y * scale;
-                        gltf.scene.position.z = -center.z * scale;
-
-                        // Reset controls
-                        this.controls.reset();
-                    },
-                    (xhr) => {
-                        const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
-                        this.loadingElement.innerHTML = `
-                            <div class="loading-spinner"></div>
-                            <p>Loading trophy model... ${percent}%</p>
-                        `;
-                    },
-                    (error) => {
-                        console.error('Error loading model:', error);
-                        this.loadingElement.style.display = 'none';
-                        this.showError('Failed to load trophy model');
-                    }
-                );
-            }
-
-            onWindowResize() {
-                this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-            }
-
-            animate() {
-                requestAnimationFrame(() => this.animate());
-                this.controls.update();
-                this.renderer.render(this.scene, this.camera);
-            }
-        }
-
-        // Modified showTeamDetail function to use the 3D viewer
         function showTeamDetail(school, sport, year, yearData) {
             const modal = document.getElementById('detailModal');
             const modalBody = modal.querySelector('.modal-body');
@@ -568,12 +370,7 @@
                 <h3>${yearData.achievement}</h3>
                 
                 <div class="trophy-display">
-                    <div id="trophy-container" class="trophy-container"></div>
-                    <div class="trophy-controls">
-                        <button class="trophy-control-btn" onclick="viewer.controls.reset()">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
+                    <div class="trophy-placeholder"></div>
                 </div>
 
                 <div class="team-grid">
@@ -587,14 +384,6 @@
             `;
 
             modal.style.display = 'block';
-
-            // Initialize the trophy viewer after the modal is shown
-            setTimeout(() => {
-                window.viewer = new TrophyViewer('trophy-container');
-                if (yearData.trophyModel) {
-                    viewer.loadModel(yearData.trophyModel);
-                }
-            }, 100);
         }
 
         function showPlayerStats(player) {
