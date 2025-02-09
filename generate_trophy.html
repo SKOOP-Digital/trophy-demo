@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Trophy GLTF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
+</head>
+<body>
+    <script>
+        // Create a scene
+        const scene = new THREE.Scene();
+
+        // Create trophy parts
+        const baseGeometry = new THREE.CylinderGeometry(0.8, 1, 0.2, 32);
+        const stemGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2, 32);
+        const bowlGeometry = new THREE.CylinderGeometry(1, 0.3, 1, 32);
+
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            metalness: 1,
+            roughness: 0.3,
+        });
+
+        const base = new THREE.Mesh(baseGeometry, material);
+        const stem = new THREE.Mesh(stemGeometry, material);
+        const bowl = new THREE.Mesh(bowlGeometry, material);
+
+        base.position.y = -1.5;
+        stem.position.y = 0;
+        bowl.position.y = 1.5;
+
+        const trophyGroup = new THREE.Group();
+        trophyGroup.add(base);
+        trophyGroup.add(stem);
+        trophyGroup.add(bowl);
+
+        scene.add(trophyGroup);
+
+        // Export the scene
+        const exporter = new THREE.GLTFExporter();
+        exporter.parse(scene, function(gltf) {
+            const output = JSON.stringify(gltf, null, 2);
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'trophy.gltf';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }, {
+            binary: false,
+            includeCustomExtensions: false,
+            embedImages: true
+        });
+    </script>
+</body>
+</html> 
