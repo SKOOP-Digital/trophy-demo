@@ -497,6 +497,7 @@
                     ${details ? `<small style="color: #666; margin-top: 10px; display: block;">${details}</small>` : ''}
                 `;
                 this.container.appendChild(errorElement);
+                this.lastErrorElement = errorElement; // Track the error element
 
                 // Create a simple fallback trophy using Three.js geometry
                 this.createFallbackTrophy();
@@ -555,6 +556,12 @@
                     url,
                     (gltf) => {
                         this.loadingElement.style.display = 'none';
+                        
+                        // Remove error message if model loaded successfully
+                        if (this.lastErrorElement) {
+                            this.lastErrorElement.remove();
+                            this.lastErrorElement = null;
+                        }
                         
                         // Clear existing model if any
                         while(this.scene.children.length > 0){ 
