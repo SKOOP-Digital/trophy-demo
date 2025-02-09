@@ -4,469 +4,437 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saginaw Schools Trophy Room</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            /* Theme Colors */
-            --color-primary: #000000;
-            --color-secondary: #FFDB58;
-            --color-accent: #14213D;
-            --color-background: #121212;
-            --color-surface: #1E1E1E;
-            --color-text-primary: #FFFFFF;
-            --color-text-secondary: #CCCCCC;
-            
-            /* Spacing */
-            --header-height: 60px;
-            --footer-height: 40px;
-            
-            /* Transitions */
-            --transition-default: 0.3s ease-in-out;
-            --transition-page: 0.5s ease-in-out;
-            
-            /* Other */
-            --border-radius: 8px;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --primary-color: #000080;
+            --secondary-color: #FFD700;
+            --accent-color: #000000;
+            --transition-speed: 0.3s;
         }
 
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--color-background);
-            color: var(--color-text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--accent-color);
         }
 
-        header {
+        .header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem 0;
             position: fixed;
+            width: 100%;
             top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background-color: var(--color-surface);
-            border-bottom: 2px solid var(--color-secondary);
-            display: flex;
-            align-items: center;
-            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
             z-index: 1000;
         }
 
-        .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--color-secondary);
-        }
-
-        .nav-breadcrumb {
-            margin-left: auto;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .nav-breadcrumb span {
-            color: var(--color-text-secondary);
-        }
-
-        .nav-breadcrumb span.active {
-            color: var(--color-secondary);
-        }
-
-        main {
-            margin-top: var(--header-height);
-            margin-bottom: var(--footer-height);
-            padding: 2rem;
-            flex: 1;
-        }
-
-        .view {
-            display: none;
-            opacity: 0;
-            transition: opacity var(--transition-page);
-        }
-
-        .view.active {
-            display: grid;
-            opacity: 1;
-        }
-
-        /* Schools View */
-        .schools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
+        .main-content {
+            margin-top: 80px;
+            margin-bottom: 80px;
+            min-height: calc(100vh - 160px);
+            padding: 2rem 0;
         }
 
         .school-card {
-            position: relative;
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
+            background: white;
+            border-radius: 15px;
             overflow: hidden;
-            cursor: pointer;
-            transition: transform var(--transition-default);
+            transition: transform var(--transition-speed);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: 100%;
         }
 
         .school-card:hover {
             transform: translateY(-5px);
         }
 
-        .school-card .background-video {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .school-image {
             width: 100%;
-            height: 100%;
+            height: 200px;
             object-fit: cover;
-            opacity: 0.3;
-        }
-
-        .school-card .content {
-            position: relative;
-            padding: 2rem;
-            z-index: 1;
-        }
-
-        .school-card h2 {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--color-secondary);
-            margin-bottom: 1rem;
-        }
-
-        /* Sports View */
-        .sports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem;
         }
 
         .sport-card {
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform var(--transition-speed);
             cursor: pointer;
-            transition: all var(--transition-default);
+            height: 100%;
         }
 
         .sport-card:hover {
-            background-color: var(--color-accent);
+            transform: scale(1.02);
         }
 
-        /* Years View */
-        .years-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem;
+        .athlete-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform var(--transition-speed);
         }
 
-        .trophy-card {
-            position: relative;
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            perspective: 1000px;
+        .athlete-card:hover {
+            transform: translateY(-5px);
         }
 
-        .trophy-card-inner {
-            position: relative;
+        .trophy-viewer {
             width: 100%;
-            height: 300px;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .trophy-card:hover .trophy-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .trophy-front, .trophy-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+            height: 400px;
+            background: #f0f0f0;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
         }
 
-        .trophy-back {
-            transform: rotateY(180deg);
-            background-color: var(--color-accent);
+        .nav-pills .nav-link {
+            color: var(--primary-color);
+            border-radius: 20px;
+            margin: 0 5px;
         }
 
-        /* Modal */
-        .modal {
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .section {
             display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .background-video {
             position: fixed;
-            top: 0;
-            left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            opacity: 0.1;
         }
 
-        .modal.active {
-            display: flex;
+        .achievement-badge {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            display: inline-block;
         }
 
-        .modal-content {
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
+        .player-stats {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
         }
 
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--footer-height);
-            background-color: var(--color-surface);
-            border-top: 2px solid var(--color-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 2rem;
-            z-index: 1000;
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--secondary-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .schools-grid,
-            .sports-grid,
-            .years-grid {
-                grid-template-columns: 1fr;
-            }
-
-            header {
-                padding: 0 1rem;
-            }
-
-            .logo {
-                font-size: 1.2rem;
-            }
-
-            main {
-                padding: 1rem;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">Saginaw Schools Trophy Room</div>
-        <nav class="nav-breadcrumb">
-            <span class="active">Schools</span>
-            <span>›</span>
-            <span>Sports</span>
-            <span>›</span>
-            <span>Years</span>
-        </nav>
+    <header class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">Saginaw Schools Trophy Room</h1>
+                <nav>
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#schools">Schools</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sports">Sports</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#athletes">Athletes</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </header>
 
-    <main>
-        <!-- Schools View -->
-        <section id="schools-view" class="view active">
-            <div class="schools-grid">
-                <!-- Schools will be dynamically populated -->
-            </div>
-        </section>
+    <main class="main-content">
+        <div class="container">
+            <!-- Schools Section -->
+            <section id="schools" class="section active">
+                <div class="row g-4">
+                    <template id="school-template">
+                        <div class="col-md-4">
+                            <div class="school-card">
+                                <img class="school-image" src="" alt="">
+                                <div class="card-body p-3">
+                                    <h3 class="h5 mb-2"></h3>
+                                    <p class="text-muted"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
 
-        <!-- Sports View -->
-        <section id="sports-view" class="view">
-            <div class="sports-grid">
-                <!-- Sports will be dynamically populated -->
-            </div>
-        </section>
+            <!-- Sports Section -->
+            <section id="sports" class="section">
+                <div class="row g-4">
+                    <template id="sport-template">
+                        <div class="col-md-4 col-lg-3">
+                            <div class="sport-card">
+                                <img class="sport-image" src="" alt="">
+                                <div class="card-body p-3">
+                                    <h3 class="h5 mb-2"></h3>
+                                    <p class="text-muted"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
 
-        <!-- Years View -->
-        <section id="years-view" class="view">
-            <div class="years-grid">
-                <!-- Years will be dynamically populated -->
+            <!-- Athletes Section -->
+            <section id="athletes" class="section">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="h4 mb-3">D1 Athletes</h2>
+                        <div class="row g-4" id="d1-athletes">
+                            <template id="athlete-template">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="athlete-card p-3">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="" alt="" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            <div>
+                                                <h4 class="h6 mb-1"></h4>
+                                                <p class="small mb-0"></p>
+                                            </div>
+                                        </div>
+                                        <div class="achievements"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="h4 mb-3">Professional Athletes</h2>
+                        <div class="row g-4" id="pro-athletes"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trophy Viewer Modal -->
+            <div class="modal fade" id="trophyModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="trophy-viewer">
+                                <div class="text-center">
+                                    <p>3D Trophy Viewer</p>
+                                    <p class="text-muted">(Placeholder - Coming Soon)</p>
+                                </div>
+                            </div>
+                            <div class="team-info mt-4">
+                                <h6>Team Roster</h6>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Number</th>
+                                                <th>Position</th>
+                                                <th>Stats</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Modal for Player Details -->
-    <div class="modal" id="player-modal">
-        <div class="modal-content">
-            <!-- Player details will be dynamically populated -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Saginaw Schools Trophy Room</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Last Updated: <span id="lastUpdated"></span></p>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <footer>
-        <span>© 2024 Saginaw Schools Trophy Room</span>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Load and parse data.json
-        let appData = null;
-        let currentSchool = null;
-        let currentSport = null;
-
+        // Load and initialize data
         async function loadData() {
             try {
                 const response = await fetch('data.json');
-                appData = await response.json();
-                renderSchools();
+                const data = await response.json();
+                initializeApp(data);
             } catch (error) {
                 console.error('Error loading data:', error);
             }
         }
 
-        function renderSchools() {
-            const container = document.querySelector('.schools-grid');
-            container.innerHTML = appData.schools.map(school => `
-                <div class="school-card" data-school-id="${school.id}">
-                    <video class="background-video" autoplay muted loop playsinline>
-                        <source src="${school.backgroundVideo}" type="video/mp4">
-                    </video>
-                    <div class="content">
-                        <h2>${school.name}</h2>
-                        <p>${school.description}</p>
-                    </div>
-                </div>
-            `).join('');
+        function initializeApp(data) {
+            // Update last updated date
+            document.getElementById('lastUpdated').textContent = new Date(data.metadata.lastUpdated).toLocaleDateString();
 
-            // Add click handlers
-            container.querySelectorAll('.school-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    currentSchool = appData.schools.find(s => s.id === card.dataset.schoolId);
-                    showView('sports-view');
-                    renderSports();
+            // Initialize sections
+            initializeSchools(data.schools);
+            initializeSports(data.sports);
+            initializeAthletes(data.athletes);
+
+            // Setup navigation
+            setupNavigation();
+        }
+
+        function initializeSchools(schools) {
+            const container = document.querySelector('#schools .row');
+            const template = document.getElementById('school-template');
+
+            schools.forEach(school => {
+                const clone = template.content.cloneNode(true);
+                const card = clone.querySelector('.school-card');
+                const img = clone.querySelector('.school-image');
+                const title = clone.querySelector('h3');
+                const description = clone.querySelector('p');
+
+                img.src = school.imageUrl;
+                img.alt = school.name;
+                title.textContent = school.name;
+                description.textContent = school.description;
+
+                container.appendChild(clone);
+            });
+        }
+
+        function initializeSports(sports) {
+            const container = document.querySelector('#sports .row');
+            const template = document.getElementById('sport-template');
+
+            sports.forEach(sport => {
+                const clone = template.content.cloneNode(true);
+                const img = clone.querySelector('.sport-image');
+                const title = clone.querySelector('h3');
+                const description = clone.querySelector('p');
+
+                img.src = sport.imageUrl;
+                img.alt = sport.name;
+                title.textContent = sport.name;
+                description.textContent = sport.description;
+
+                container.appendChild(clone);
+            });
+        }
+
+        function initializeAthletes(athletes) {
+            const d1Container = document.getElementById('d1-athletes');
+            const proContainer = document.getElementById('pro-athletes');
+            const template = document.getElementById('athlete-template');
+
+            function populateAthletes(container, athleteList) {
+                athleteList.forEach(athlete => {
+                    const clone = template.content.cloneNode(true);
+                    const img = clone.querySelector('img');
+                    const name = clone.querySelector('h4');
+                    const details = clone.querySelector('p');
+                    const achievements = clone.querySelector('.achievements');
+
+                    img.src = athlete.photo;
+                    img.alt = athlete.name;
+                    name.textContent = athlete.name;
+                    details.textContent = athlete.college || athlete.professional;
+
+                    athlete.achievements.forEach(achievement => {
+                        const badge = document.createElement('span');
+                        badge.className = 'achievement-badge';
+                        badge.textContent = achievement;
+                        achievements.appendChild(badge);
+                    });
+
+                    container.appendChild(clone);
                 });
-            });
-        }
-
-        function renderSports() {
-            const container = document.querySelector('.sports-grid');
-            container.innerHTML = currentSchool.sports.map(sportId => {
-                const sport = appData.sports.find(s => s.id === sportId);
-                return `
-                    <div class="sport-card" data-sport-id="${sport.id}">
-                        <h3>${sport.name}</h3>
-                        <p>${sport.description}</p>
-                    </div>
-                `;
-            }).join('');
-
-            // Add click handlers
-            container.querySelectorAll('.sport-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    currentSport = appData.sports.find(s => s.id === card.dataset.sportId);
-                    showView('years-view');
-                    renderYears();
-                });
-            });
-        }
-
-        function renderYears() {
-            const container = document.querySelector('.years-grid');
-            const achievements = appData.years
-                .flatMap(year => year.achievements
-                    .filter(a => a.schoolId === currentSchool.id && a.sportId === currentSport.id)
-                    .map(a => ({ year: year.year, ...a })));
-
-            container.innerHTML = achievements.map(achievement => `
-                <div class="trophy-card">
-                    <div class="trophy-card-inner">
-                        <div class="trophy-front">
-                            <h3>${achievement.year}</h3>
-                            <p>${achievement.achievement}</p>
-                        </div>
-                        <div class="trophy-back">
-                            <h4>Team Roster</h4>
-                            <button onclick="showPlayerModal('${achievement.year}')">View Team</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function showView(viewId) {
-            document.querySelectorAll('.view').forEach(view => {
-                view.classList.remove('active');
-            });
-            document.getElementById(viewId).classList.add('active');
-            
-            // Update breadcrumb
-            const breadcrumbs = document.querySelectorAll('.nav-breadcrumb span');
-            breadcrumbs.forEach(crumb => crumb.classList.remove('active'));
-            
-            switch(viewId) {
-                case 'schools-view':
-                    breadcrumbs[0].classList.add('active');
-                    break;
-                case 'sports-view':
-                    breadcrumbs[2].classList.add('active');
-                    break;
-                case 'years-view':
-                    breadcrumbs[4].classList.add('active');
-                    break;
             }
+
+            populateAthletes(d1Container, athletes.d1);
+            populateAthletes(proContainer, athletes.pro);
         }
 
-        function showPlayerModal(year) {
-            const modal = document.getElementById('player-modal');
-            const achievement = appData.years
-                .find(y => y.year === year)
-                .achievements
-                .find(a => a.schoolId === currentSchool.id && a.sportId === currentSport.id);
+        function setupNavigation() {
+            const links = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
 
-            const modalContent = modal.querySelector('.modal-content');
-            modalContent.innerHTML = `
-                <h2>${currentSchool.name} - ${currentSport.name} - ${year}</h2>
-                <div class="team-photo">
-                    <img src="${achievement.teamPhoto}" alt="Team Photo">
-                </div>
-                <div class="roster">
-                    ${achievement.roster.map(player => `
-                        <div class="player-card">
-                            <img src="${player.photo}" alt="${player.name}">
-                            <h3>${player.name}</h3>
-                            <p>#${player.number} - ${player.position}</p>
-                            <div class="stats">
-                                ${Object.entries(player.stats).map(([key, value]) => `
-                                    <p>${key}: ${value}</p>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            
-            modal.classList.add('active');
-            
-            // Close modal when clicking outside
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+
+                    // Update navigation
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    // Update sections
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
             });
         }
 
         // Initialize the application
-        loadData();
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
