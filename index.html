@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saginaw Schools Trophy Showcase</title>
+    <title>Saginaw Schools Trophy Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -12,7 +12,7 @@
             --black: #000000;
             --white: #ffffff;
             --gray: #f5f5f5;
-            --transition: all 0.3s ease;
+            --dark-gray: #333333;
         }
 
         * {
@@ -35,12 +35,17 @@
             right: 0;
             background: var(--navy);
             color: var(--white);
-            padding: 1rem 2rem;
+            padding: 1rem;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .logo {
@@ -49,95 +54,77 @@
             color: var(--gold);
         }
 
-        .nav-toggle {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gold);
-        }
-
         .main-content {
-            margin-top: 4rem;
+            margin-top: 80px;
             padding: 2rem;
-            min-height: calc(100vh - 8rem);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .schools-grid {
+        .navigation-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .school-card {
+        .nav-card {
             background: var(--white);
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: var(--transition);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             position: relative;
         }
 
-        .school-card:hover {
+        .nav-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
 
-        .school-image {
-            width: 100%;
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .school-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
-        }
-
-        .school-info {
+        .nav-card-content {
             padding: 1.5rem;
-        }
-
-        .school-name {
-            font-size: 1.5rem;
-            color: var(--navy);
-            margin-bottom: 1rem;
-        }
-
-        .school-stats {
+            background: linear-gradient(to bottom, rgba(0, 0, 128, 0.9), rgba(0, 0, 128, 0.7));
+            color: var(--white);
+            height: 200px;
             display: flex;
-            gap: 1rem;
-            color: #666;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .nav-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .nav-card p {
             font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
             z-index: 2000;
         }
 
         .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: var(--white);
             padding: 2rem;
-            border-radius: 15px;
+            border-radius: 10px;
             width: 90%;
-            max-width: 1200px;
+            max-width: 800px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -146,43 +133,25 @@
             position: absolute;
             top: 1rem;
             right: 1rem;
+            background: none;
+            border: none;
+            color: var(--dark-gray);
             font-size: 1.5rem;
-            color: var(--white);
             cursor: pointer;
-        }
-
-        .sports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .sport-card {
-            background: var(--gray);
-            padding: 1.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .sport-card:hover {
-            background: var(--gold);
-            color: var(--navy);
         }
 
         .trophy-display {
             perspective: 1000px;
-            width: 300px;
-            height: 300px;
-            margin: 2rem auto;
+            margin: 2rem 0;
         }
 
-        .trophy-model {
-            width: 100%;
-            height: 100%;
+        .trophy-placeholder {
+            width: 200px;
+            height: 200px;
+            background: var(--gold);
+            margin: 0 auto;
             transform-style: preserve-3d;
-            animation: rotate 20s infinite linear;
+            animation: rotate 10s infinite linear;
         }
 
         @keyframes rotate {
@@ -190,245 +159,301 @@
             to { transform: rotateY(360deg); }
         }
 
-        .player-card {
-            background: var(--white);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .player-stats {
+        .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 2rem;
         }
 
-        .stat-item {
-            text-align: center;
-            padding: 0.5rem;
+        .player-card {
             background: var(--gray);
+            padding: 1rem;
             border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .player-card:hover {
+            background: var(--gold);
+            color: var(--navy);
         }
 
         .footer {
-            background: var(--navy);
-            color: var(--white);
-            padding: 1rem 2rem;
-            text-align: center;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
+            background: var(--navy);
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
         }
 
         @media (max-width: 768px) {
-            .nav-toggle {
-                display: block;
-            }
-
-            .nav-menu {
-                position: fixed;
-                top: 4rem;
-                right: -100%;
-                background: var(--navy);
-                width: 80%;
-                height: calc(100vh - 4rem);
-                padding: 2rem;
-                transition: var(--transition);
-            }
-
-            .nav-menu.active {
-                right: 0;
-            }
-
-            .schools-grid {
+            .navigation-grid {
                 grid-template-columns: 1fr;
             }
+
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            color: var(--dark-gray);
+        }
+
+        .breadcrumb span {
+            margin: 0 0.5rem;
+            color: var(--navy);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray);
+            border-top: 5px solid var(--navy);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="logo">Saginaw Trophy Showcase</div>
-        <div class="nav-toggle">
-            <i class="fas fa-bars"></i>
+        <div class="header-content">
+            <div class="logo">Saginaw Schools Trophy Room</div>
+            <nav class="main-nav">
+                <!-- Navigation will be dynamically populated -->
+            </nav>
         </div>
     </header>
 
     <main class="main-content">
-        <div class="schools-grid" id="schoolsGrid">
-            <!-- Schools will be populated here -->
+        <div class="breadcrumb">
+            Home
         </div>
+
+        <div class="navigation-grid">
+            <!-- Will be dynamically populated -->
+        </div>
+
+        <div class="loading-spinner"></div>
     </main>
 
-    <div class="modal" id="schoolModal">
-        <div class="close-modal">×</div>
+    <div class="modal" id="detailModal">
         <div class="modal-content">
-            <!-- Modal content will be populated here -->
+            <button class="close-modal">&times;</button>
+            <div class="modal-body">
+                <!-- Will be dynamically populated -->
+            </div>
         </div>
     </div>
 
     <footer class="footer">
-        <p>© 2024 Saginaw Schools Trophy Showcase. All rights reserved.</p>
+        <p>&copy; 2024 Saginaw Schools Trophy Room. All rights reserved.</p>
     </footer>
 
     <script>
-        // Load and parse the JSON data
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                initializeApp(data);
-            })
-            .catch(error => console.error('Error loading data:', error));
+        let currentData = null;
+        let navigationHistory = [];
 
-        function initializeApp(data) {
-            const schoolsGrid = document.getElementById('schoolsGrid');
-            const modal = document.getElementById('schoolModal');
-            const closeModal = document.querySelector('.close-modal');
-
-            // Populate schools
-            data.schools.forEach(school => {
-                const schoolCard = createSchoolCard(school);
-                schoolsGrid.appendChild(schoolCard);
-            });
-
-            // Modal handling
-            closeModal.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
-
-            window.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+        // Fetch and load the JSON data
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                currentData = await response.json();
+                renderMainNavigation();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
         }
 
-        function createSchoolCard(school) {
+        function renderMainNavigation() {
+            const grid = document.querySelector('.navigation-grid');
+            grid.innerHTML = '';
+
+            if (navigationHistory.length === 0) {
+                // Show schools
+                currentData.schools.forEach(school => {
+                    const card = createNavigationCard(school.name, 'School', () => {
+                        navigationHistory.push({ type: 'school', id: school.id });
+                        renderSchoolView(school);
+                    });
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        function createNavigationCard(title, type, onClick) {
             const card = document.createElement('div');
-            card.className = 'school-card';
+            card.className = 'nav-card';
             card.innerHTML = `
-                <div class="school-image" style="background-image: url(${school.logo})">
-                    <div class="school-overlay"></div>
-                </div>
-                <div class="school-info">
-                    <h2 class="school-name">${school.name}</h2>
-                    <div class="school-stats">
-                        <span>${school.sports.length} Sports</span>
-                        <span>${countTrophies(school)} Trophies</span>
-                    </div>
+                <div class="nav-card-content">
+                    <h2>${title}</h2>
+                    <p>${type}</p>
                 </div>
             `;
-
-            card.addEventListener('click', () => showSchoolDetails(school));
+            card.addEventListener('click', onClick);
             return card;
         }
 
-        function countTrophies(school) {
-            return school.sports.reduce((total, sport) => {
-                return total + (sport.years ? sport.years.length : 0);
-            }, 0);
+        function renderSchoolView(school) {
+            const grid = document.querySelector('.navigation-grid');
+            grid.innerHTML = '';
+
+            // Render sports categories
+            currentData.sportCategories.forEach(sport => {
+                const card = createNavigationCard(sport, 'Sport', () => {
+                    navigationHistory.push({ type: 'sport', name: sport });
+                    renderSportView(school, sport);
+                });
+                grid.appendChild(card);
+            });
+
+            // Add D1 Athletes card
+            if (school.athletes?.d1?.length > 0) {
+                const d1Card = createNavigationCard('D1 Athletes', 'Athletes', () => {
+                    showAthletesList(school.athletes.d1);
+                });
+                grid.appendChild(d1Card);
+            }
+
+            // Add Pro Athletes card
+            if (school.athletes?.pro?.length > 0) {
+                const proCard = createNavigationCard('Pro Athletes', 'Athletes', () => {
+                    showAthletesList(school.athletes.pro);
+                });
+                grid.appendChild(proCard);
+            }
+
+            updateBreadcrumb();
         }
 
-        function showSchoolDetails(school) {
-            const modal = document.getElementById('schoolModal');
-            const content = modal.querySelector('.modal-content');
+        function renderSportView(school, sportName) {
+            const grid = document.querySelector('.navigation-grid');
+            grid.innerHTML = '';
 
-            content.innerHTML = `
-                <h2 style="color: var(--navy); margin-bottom: 2rem;">${school.name}</h2>
-                <div class="sports-grid">
-                    ${school.sports.map(sport => `
-                        <div class="sport-card" onclick="showSportDetails('${school.id}', '${sport.id}')">
-                            <h3>${sport.name}</h3>
-                            <p>${sport.years ? sport.years.length : 0} Achievements</p>
+            const sport = Object.values(school.sports).find(s => s.name === sportName);
+            if (sport) {
+                Object.entries(sport.years).forEach(([year, yearData]) => {
+                    const card = createNavigationCard(year, yearData.achievement, () => {
+                        showTeamDetail(school, sport, year, yearData);
+                    });
+                    grid.appendChild(card);
+                });
+            }
+
+            updateBreadcrumb();
+        }
+
+        function showTeamDetail(school, sport, year, yearData) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
+
+            modalBody.innerHTML = `
+                <h2>${school.name} ${sport.name} - ${year}</h2>
+                <h3>${yearData.achievement}</h3>
+                
+                <div class="trophy-display">
+                    <div class="trophy-placeholder"></div>
+                </div>
+
+                <div class="team-grid">
+                    ${yearData.roster.map(player => `
+                        <div class="player-card" onclick="showPlayerStats(${JSON.stringify(player)})">
+                            <h4>${player.name}</h4>
+                            <p>#${player.number} - ${player.position}</p>
                         </div>
                     `).join('')}
                 </div>
-                ${school.athletes ? `
-                    <h3 style="margin: 2rem 0 1rem;">Notable Athletes</h3>
-                    <div class="athletes-section">
-                        <h4>D1 Athletes</h4>
-                        ${school.athletes.d1.map(athlete => `
-                            <div class="player-card">
-                                <h4>${athlete.name}</h4>
-                                <p>${athlete.sport} - ${athlete.college}</p>
-                            </div>
-                        `).join('')}
-                        
-                        <h4>Professional Athletes</h4>
-                        ${school.athletes.pro.map(athlete => `
-                            <div class="player-card">
-                                <h4>${athlete.name}</h4>
-                                <p>${athlete.sport} - ${athlete.team}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
             `;
 
-            modal.style.display = 'flex';
+            modal.style.display = 'block';
         }
 
-        function showSportDetails(schoolId, sportId) {
-            fetch('data.json')
-                .then(response => response.json())
-                .then(data => {
-                    const school = data.schools.find(s => s.id === schoolId);
-                    const sport = school.sports.find(s => s.id === sportId);
-                    
-                    const modal = document.getElementById('schoolModal');
-                    const content = modal.querySelector('.modal-content');
+        function showPlayerStats(player) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
 
-                    content.innerHTML = `
-                        <h2 style="color: var(--navy); margin-bottom: 1rem;">${sport.name}</h2>
-                        <h3 style="color: var(--navy); margin-bottom: 2rem;">${school.name}</h3>
-                        
-                        ${sport.years.map(year => `
-                            <div class="trophy-year">
-                                <h3>${year.year} - ${year.achievement}</h3>
-                                <div class="trophy-display">
-                                    <div class="trophy-model">
-                                        <!-- Placeholder for 3D model -->
-                                        <img src="${year.trophyImage}" alt="Trophy" style="width: 100%; height: 100%; object-fit: contain;">
-                                    </div>
-                                </div>
-                                
-                                <h4>Team Roster</h4>
-                                <div class="player-grid">
-                                    ${year.team.roster.map(player => `
-                                        <div class="player-card">
-                                            <h4>${player.name} - #${player.number}</h4>
-                                            <p>${player.position}</p>
-                                            <div class="player-stats">
-                                                ${Object.entries(player.stats).map(([key, value]) => `
-                                                    <div class="stat-item">
-                                                        <div class="stat-value">${value}</div>
-                                                        <div class="stat-label">${formatStatLabel(key)}</div>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        `).join('')}
-                    `;
-                });
+            modalBody.innerHTML = `
+                <h2>${player.name}</h2>
+                <h3>#${player.number} - ${player.position}</h3>
+                
+                <div style="margin-top: 2rem;">
+                    <h4>Statistics</h4>
+                    ${Object.entries(player.stats).map(([stat, value]) => `
+                        <p>${stat.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${value}</p>
+                    `).join('')}
+                </div>
+            `;
         }
 
-        function formatStatLabel(key) {
-            return key
-                .replace(/([A-Z])/g, ' $1')
-                .replace(/^./, str => str.toUpperCase())
-                .replace(/PerGame/g, ' Per Game');
+        function showAthletesList(athletes) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
+
+            modalBody.innerHTML = `
+                <h2>${athletes[0].college ? 'D1 Athletes' : 'Professional Athletes'}</h2>
+                <div class="team-grid">
+                    ${athletes.map(athlete => `
+                        <div class="player-card">
+                            <h4>${athlete.name}</h4>
+                            <p>${athlete.sport}</p>
+                            <p>${athlete.college || athlete.professional}</p>
+                            <p>Class of ${athlete.graduationYear}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            modal.style.display = 'block';
         }
 
-        // Mobile navigation
-        document.querySelector('.nav-toggle').addEventListener('click', () => {
-            document.querySelector('.nav-menu').classList.toggle('active');
+        function updateBreadcrumb() {
+            const breadcrumb = document.querySelector('.breadcrumb');
+            let path = ['Home'];
+            
+            navigationHistory.forEach(item => {
+                if (item.type === 'school') {
+                    const school = currentData.schools.find(s => s.id === item.id);
+                    path.push(school.name);
+                } else if (item.type === 'sport') {
+                    path.push(item.name);
+                }
+            });
+
+            breadcrumb.innerHTML = path.join(' <span>/</span> ');
+        }
+
+        // Close modal when clicking the close button or outside the modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.getElementById('detailModal').style.display = 'none';
         });
+
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('detailModal');
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Initialize the application
+        loadData();
     </script>
 </body>
 </html>
