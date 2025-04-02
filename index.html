@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,7 +74,8 @@
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
-            margin-bottom: 80px; /* Space for footer */
+            margin-bottom: 80px;
+            /* Space for footer */
         }
 
         .navigation-grid {
@@ -122,7 +124,7 @@
             z-index: 1;
         }
 
-        .nav-card-content > * {
+        .nav-card-content>* {
             position: relative;
             z-index: 2;
         }
@@ -407,8 +409,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 768px) {
@@ -437,6 +444,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="header-content">
@@ -509,19 +517,22 @@
         const breadcrumb = document.querySelector('.breadcrumb');
         const backButton = document.getElementById('backButton');
 
-        // Fetch data from API
+        // Fetch data from API with CORS proxy
         async function fetchData(endpoint) {
             try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                const proxyUrl = 'https://corsproxy.io/?';
+                const targetUrl = `${API_BASE_URL}${endpoint}`;
+
+                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
                     method: 'POST',
                     headers: API_HEADERS,
                     body: JSON.stringify({})
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`API error: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 return data[0]?.data || [];
             } catch (error) {
@@ -530,11 +541,10 @@
                 return [];
             }
         }
-
         // Load all data
         async function loadAllData() {
             showLoading(true);
-            
+
             try {
                 // Fetch all data in parallel
                 const [schools, teams, individuals] = await Promise.all([
@@ -542,11 +552,11 @@
                     fetchData(API_ENDPOINTS.teams),
                     fetchData(API_ENDPOINTS.individuals)
                 ]);
-                
+
                 schoolsData = schools;
                 teamsData = teams;
                 individualsData = individuals;
-                
+
                 showLoading(false);
                 renderMainView();
             } catch (error) {
@@ -571,7 +581,7 @@
                 <i class="fas fa-exclamation-triangle"></i>
                 <p>${message}</p>
             `;
-            
+
             navigationGrid.innerHTML = '';
             navigationGrid.appendChild(errorDiv);
             navigationGrid.style.display = 'block';
@@ -582,22 +592,22 @@
         function renderMainView() {
             navigationHistory = [];
             updateBreadcrumb();
-            
+
             navigationGrid.innerHTML = '';
-            
+
             if (!schoolsData || schoolsData.length === 0) {
                 showError('No schools found.');
                 return;
             }
-            
+
             schoolsData.forEach(school => {
                 const card = document.createElement('div');
                 card.className = 'nav-card';
-                
+
                 // Set school colors based on the data
                 const primaryColor = school.primary_color || 'var(--navy)';
                 const secondaryColor = school.secondary_color || 'var(--gold)';
-                
+
                 card.innerHTML = `
                     <div class="nav-card-content school-card-content" style="background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}CC 100%);">
                         ${school.media_url ? `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('${school.media_url}'); background-size: cover; background-position: center; opacity: 0.2;"></div>` : ''}
@@ -605,35 +615,35 @@
                         <p>School</p>
                     </div>
                 `;
-                
+
                 card.addEventListener('click', () => {
                     navigationHistory.push({ type: 'school', name: school.name });
                     renderSchoolView(school);
                 });
-                
+
                 navigationGrid.appendChild(card);
             });
-            
+
             backButton.style.display = 'none';
         }
 
         // Render school view with sports and athlete options
         function renderSchoolView(school) {
             navigationGrid.innerHTML = '';
-            
+
             // Get unique sports for this school
             const schoolTeams = teamsData.filter(team => team.school_name === school.name);
             const uniqueSports = [...new Set(schoolTeams.map(team => team.sport_name))];
-            
+
             // Render sports categories
             uniqueSports.forEach(sport => {
                 const card = document.createElement('div');
                 card.className = 'nav-card';
-                
+
                 // Find any team for this sport to get media
                 const anyTeamForSport = schoolTeams.find(team => team.sport_name === sport);
                 const mediaUrl = anyTeamForSport?.media_url || '';
-                
+
                 card.innerHTML = `
                     <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
                         ${mediaUrl ? `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('${mediaUrl}'); background-size: cover; background-position: center; opacity: 0.3;"></div>` : ''}
@@ -641,59 +651,59 @@
                         <p>Sport</p>
                     </div>
                 `;
-                
+
                 card.addEventListener('click', () => {
                     navigationHistory.push({ type: 'sport', name: sport });
                     renderSportView(school, sport);
                 });
-                
+
                 navigationGrid.appendChild(card);
             });
-            
+
             // Get D1 Athletes
-            const d1Athletes = individualsData.filter(individual => 
+            const d1Athletes = individualsData.filter(individual =>
                 individual.school_name === school.name && individual.type === 'd1_athlete');
-            
+
             if (d1Athletes.length > 0) {
                 const d1Card = document.createElement('div');
                 d1Card.className = 'nav-card';
-                
+
                 d1Card.innerHTML = `
                     <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
                         <h2 style="color: ${school.secondary_color};">D1 Athletes</h2>
                         <p>${d1Athletes.length} Athletes</p>
                     </div>
                 `;
-                
+
                 d1Card.addEventListener('click', () => {
                     showAthletesList(school, d1Athletes, 'D1');
                 });
-                
+
                 navigationGrid.appendChild(d1Card);
             }
-            
+
             // Get Pro Athletes
-            const proAthletes = individualsData.filter(individual => 
+            const proAthletes = individualsData.filter(individual =>
                 individual.school_name === school.name && individual.type === 'pro_athlete');
-            
+
             if (proAthletes.length > 0) {
                 const proCard = document.createElement('div');
                 proCard.className = 'nav-card';
-                
+
                 proCard.innerHTML = `
                     <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
                         <h2 style="color: ${school.secondary_color};">Pro Athletes</h2>
                         <p>${proAthletes.length} Athletes</p>
                     </div>
                 `;
-                
+
                 proCard.addEventListener('click', () => {
                     showAthletesList(school, proAthletes, 'Professional');
                 });
-                
+
                 navigationGrid.appendChild(proCard);
             }
-            
+
             updateBreadcrumb();
             backButton.style.display = 'inline-flex';
         }
@@ -701,23 +711,23 @@
         // Render sport view with years
         function renderSportView(school, sportName) {
             navigationGrid.innerHTML = '';
-            
+
             // Get teams for this school and sport
-            const sportTeams = teamsData.filter(team => 
+            const sportTeams = teamsData.filter(team =>
                 team.school_name === school.name && team.sport_name === sportName);
-            
+
             if (sportTeams.length === 0) {
                 showError(`No teams found for ${sportName} at ${school.name}.`);
                 return;
             }
-            
+
             // Sort teams by year (newest first)
             sportTeams.sort((a, b) => b.year - a.year);
-            
+
             sportTeams.forEach(team => {
                 const card = document.createElement('div');
                 card.className = 'nav-card';
-                
+
                 card.innerHTML = `
                     <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
                         ${team.media_url ? `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('${team.media_url}'); background-size: cover; background-position: center; opacity: 0.3;"></div>` : ''}
@@ -725,15 +735,15 @@
                         <p>${team.achievement}</p>
                     </div>
                 `;
-                
+
                 card.addEventListener('click', () => {
                     navigationHistory.push({ type: 'year', year: team.year });
                     showTeamDetail(school, team);
                 });
-                
+
                 navigationGrid.appendChild(card);
             });
-            
+
             updateBreadcrumb();
             backButton.style.display = 'inline-flex';
         }
@@ -742,20 +752,20 @@
         function showTeamDetail(school, team) {
             const modal = document.getElementById('detailModal');
             const modalBody = modal.querySelector('.modal-body');
-            
+
             // Get team players
-            const teamPlayers = individualsData.filter(individual => 
-                individual.school_name === school.name && 
-                individual.team_sport === team.sport_name && 
+            const teamPlayers = individualsData.filter(individual =>
+                individual.school_name === school.name &&
+                individual.team_sport === team.sport_name &&
                 individual.team_year === team.year &&
                 individual.type === 'player');
-            
+
             modalBody.innerHTML = `
                 <h2>${school.name} ${team.sport_name} - ${team.year}</h2>
                 <h3>${team.achievement}</h3>
                 
-                ${team.team_photo_url ? 
-                    `<img src="${team.team_photo_url}" alt="${school.name} ${team.sport_name} Team" class="team-photo">` : 
+                ${team.team_photo_url ?
+                    `<img src="${team.team_photo_url}" alt="${school.name} ${team.sport_name} Team" class="team-photo">` :
                     ''}
                 
                 <div class="trophy-display">
@@ -771,18 +781,18 @@
                 <div class="team-grid">
                     ${teamPlayers.map(player => `
                         <div class="player-card" onclick="showPlayerStats(${JSON.stringify(player).replace(/"/g, '&quot;')})">
-                            ${player.media_url && player.media_url !== 'placeholder_url' ? 
-                                `<img src="${player.media_url}" alt="${player.name}" class="player-img">` : 
-                                '<i class="fas fa-user" style="font-size: 40px; color: var(--navy); margin-bottom: 1rem; display: block;"></i>'}
+                            ${player.media_url && player.media_url !== 'placeholder_url' ?
+                            `<img src="${player.media_url}" alt="${player.name}" class="player-img">` :
+                            '<i class="fas fa-user" style="font-size: 40px; color: var(--navy); margin-bottom: 1rem; display: block;"></i>'}
                             <h4>${player.name}</h4>
                             <p>#${player.number} - ${player.position}</p>
                         </div>
                     `).join('')}
                 </div>
             `;
-            
+
             modal.style.display = 'block';
-            
+
             // Initialize the trophy viewer after the modal is shown
             setTimeout(() => {
                 window.viewer = new TrophyViewer('trophy-container');
@@ -796,7 +806,7 @@
         function showPlayerStats(player) {
             const modal = document.getElementById('detailModal');
             const modalBody = modal.querySelector('.modal-body');
-            
+
             // Get all stats that have values
             const stats = [];
             if (player.points_per_game) stats.push(["Points Per Game", player.points_per_game]);
@@ -805,26 +815,26 @@
             if (player.passing_yards) stats.push(["Passing Yards", player.passing_yards]);
             if (player.touchdowns) stats.push(["Touchdowns", player.touchdowns]);
             if (player.completion_percentage) stats.push(["Completion Percentage", player.completion_percentage]);
-            if (player.other_stat_name && player.other_stat_value) 
+            if (player.other_stat_name && player.other_stat_value)
                 stats.push([player.other_stat_name, player.other_stat_value]);
-            
+
             modalBody.innerHTML = `
                 <h2>${player.name}</h2>
                 <h3>#${player.number} - ${player.position}</h3>
                 
-                ${player.media_url && player.media_url !== 'placeholder_url' ? 
+                ${player.media_url && player.media_url !== 'placeholder_url' ?
                     `<img src="${player.media_url}" alt="${player.name}" style="max-width: 300px; max-height: 300px; display: block; margin: 1.5rem auto; border-radius: var(--border-radius);">` : ''}
                 
                 <div style="margin-top: 2rem;">
                     <h4>Statistics</h4>
-                    ${stats.length > 0 ? 
-                        stats.map(([stat, value]) => `
+                    ${stats.length > 0 ?
+                    stats.map(([stat, value]) => `
                             <p>${stat}: ${value}</p>
-                        `).join('') : 
-                        '<p>No statistics available</p>'}
+                        `).join('') :
+                    '<p>No statistics available</p>'}
                 </div>
             `;
-            
+
             modal.style.display = 'block';
         }
 
@@ -832,15 +842,15 @@
         function showAthletesList(school, athletes, type) {
             const modal = document.getElementById('detailModal');
             const modalBody = modal.querySelector('.modal-body');
-            
+
             modalBody.innerHTML = `
                 <h2>${school.name} ${type} Athletes</h2>
                 <div class="team-grid">
                     ${athletes.map(athlete => `
                         <div class="player-card">
-                            ${athlete.media_url && athlete.media_url !== 'placeholder_url' ? 
-                                `<img src="${athlete.media_url}" alt="${athlete.name}" class="player-img">` : 
-                                '<i class="fas fa-user" style="font-size: 40px; color: var(--navy); margin-bottom: 1rem; display: block;"></i>'}
+                            ${athlete.media_url && athlete.media_url !== 'placeholder_url' ?
+                    `<img src="${athlete.media_url}" alt="${athlete.name}" class="player-img">` :
+                    '<i class="fas fa-user" style="font-size: 40px; color: var(--navy); margin-bottom: 1rem; display: block;"></i>'}
                             <h4>${athlete.name}</h4>
                             <p>${athlete.sport}</p>
                             <p>${athlete.college || athlete.professional_team}</p>
@@ -849,14 +859,14 @@
                     `).join('')}
                 </div>
             `;
-            
+
             modal.style.display = 'block';
         }
 
         // Update breadcrumb
         function updateBreadcrumb() {
             let path = ['Home'];
-            
+
             navigationHistory.forEach(item => {
                 if (item.type === 'school') {
                     path.push(item.name);
@@ -866,7 +876,7 @@
                     path.push(item.year);
                 }
             });
-            
+
             breadcrumb.innerHTML = path.join(' <span>/</span> ');
         }
 
@@ -874,12 +884,12 @@
         function goBack() {
             if (navigationHistory.length > 0) {
                 navigationHistory.pop();
-                
+
                 if (navigationHistory.length === 0) {
                     renderMainView();
                 } else {
                     const lastItem = navigationHistory[navigationHistory.length - 1];
-                    
+
                     if (lastItem.type === 'school') {
                         const school = schoolsData.find(s => s.name === lastItem.name);
                         if (school) {
@@ -893,7 +903,7 @@
                         }
                     }
                 }
-                
+
                 updateBreadcrumb();
             }
         }
@@ -903,10 +913,10 @@
             constructor(containerId) {
                 this.container = document.getElementById(containerId);
                 this.setupLoadingState();
-                
+
                 // Check WebGL support
                 try {
-                    this.renderer = new THREE.WebGLRenderer({ 
+                    this.renderer = new THREE.WebGLRenderer({
                         antialias: true,
                         alpha: true,
                         powerPreference: "high-performance"
@@ -925,7 +935,7 @@
                 this.scene = new THREE.Scene();
                 this.scene.background = new THREE.Color(0xf8f9fa);
                 this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
-                
+
                 // Set up renderer
                 this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
                 this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -1062,8 +1072,8 @@
 
             createFallbackTrophy() {
                 // Clear existing scene
-                while(this.scene.children.length > 0){ 
-                    this.scene.remove(this.scene.children[0]); 
+                while (this.scene.children.length > 0) {
+                    this.scene.remove(this.scene.children[0]);
                 }
 
                 // Add lights
@@ -1098,20 +1108,20 @@
 
             loadModel(url) {
                 this.loadingElement.style.display = 'block';
-                
+
                 // Remove any existing error messages
                 const existingErrors = this.container.querySelectorAll('.trophy-error');
                 existingErrors.forEach(el => el.remove());
-                
+
                 const loader = new THREE.GLTFLoader();
                 loader.load(
                     url,
                     (gltf) => {
                         this.loadingElement.style.display = 'none';
-                        
+
                         // Clear existing model if any
-                        while(this.scene.children.length > 0){ 
-                            this.scene.remove(this.scene.children[0]); 
+                        while (this.scene.children.length > 0) {
+                            this.scene.remove(this.scene.children[0]);
                         }
 
                         // Add lights back
@@ -1187,4 +1197,5 @@
         document.addEventListener('DOMContentLoaded', loadAllData);
     </script>
 </body>
+
 </html>
