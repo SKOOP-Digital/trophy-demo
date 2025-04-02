@@ -73,6 +73,7 @@
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
+            margin-bottom: 80px; /* Space for footer */
         }
 
         .navigation-grid {
@@ -265,8 +266,6 @@
         }
 
         .player-card:hover {
-            background: var(--gold);
-            color: var(--navy);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px var(--shadow-color);
         }
@@ -300,8 +299,27 @@
             font-weight: 500;
         }
 
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            color: var(--navy);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            margin-left: 1rem;
+        }
+
+        .back-button:hover {
+            background: var(--light-gray);
+        }
+
         .loading-spinner {
-            display: none;
+            display: inline-block;
             width: 50px;
             height: 50px;
             border: 5px solid var(--gray);
@@ -309,6 +327,11 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 2rem auto;
+        }
+
+        .loading-container {
+            text-align: center;
+            padding: 3rem;
         }
 
         .trophy-loading {
@@ -336,6 +359,51 @@
             width: 80%;
             box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
             border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .media-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .media-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .school-card-content {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .player-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--gold);
+        }
+
+        .team-photo {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .error-message {
+            background: #fff0f0;
+            color: #d32f2f;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 2rem 0;
+            border-left: 4px solid #d32f2f;
         }
 
         @keyframes spin {
@@ -380,15 +448,23 @@
     </header>
 
     <main class="main-content">
-        <div class="breadcrumb">
-            Home
+        <div class="breadcrumb-container">
+            <div class="breadcrumb">
+                Home
+            </div>
+            <button id="backButton" class="back-button" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
         </div>
 
         <div class="navigation-grid">
             <!-- Will be dynamically populated -->
         </div>
 
-        <div class="loading-spinner"></div>
+        <div id="loadingContainer" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading data...</p>
+        </div>
     </main>
 
     <div class="modal" id="detailModal">
@@ -405,106 +481,421 @@
     </footer>
 
     <script>
-        let currentData = null;
+        // Global variables for storing data
+        let schoolsData = [];
+        let teamsData = [];
+        let individualsData = [];
         let navigationHistory = [];
+        let isLoading = true;
 
-        // Fetch and load the JSON data
-        async function loadData() {
+        // API endpoints and headers
+        const API_BASE_URL = 'https://budibase.skoop.digital/api/public/v1/queries/';
+        const API_HEADERS = {
+            'x-budibase-app-id': 'app_3ea495f0892c4311badfd934783afd94',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'x-budibase-api-key': '69b1bc10c2d32ee607e44e4a30f7f5ea-b9dd09ff6c773a4628f737a0ab45f9e0304e6a8c85181a90f8ff74cc29c946528f373cc83f24ae20'
+        };
+
+        const API_ENDPOINTS = {
+            schools: 'query_datasource_plus_56025c99333e46b8a073e70585159c4c_4a3b9f6c024c4381afcf9f4e83f85f7d',
+            teams: 'query_datasource_plus_56025c99333e46b8a073e70585159c4c_a47c1c9912c34d15b67e49ec62908fa0',
+            individuals: 'query_datasource_plus_56025c99333e46b8a073e70585159c4c_f62962e3b6ff47e690977d49cd6d6165'
+        };
+
+        // DOM elements
+        const navigationGrid = document.querySelector('.navigation-grid');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const breadcrumb = document.querySelector('.breadcrumb');
+        const backButton = document.getElementById('backButton');
+
+        // Fetch data from API
+        async function fetchData(endpoint) {
             try {
-                const response = await fetch('data.json');
-                currentData = await response.json();
-                if (!currentData || !currentData.schools || !currentData.sportCategories) {
-                    throw new Error('Invalid data structure');
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: API_HEADERS,
+                    body: JSON.stringify({})
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
                 }
-                renderMainNavigation();
+                
+                const data = await response.json();
+                return data[0]?.data || [];
+            } catch (error) {
+                console.error(`Error fetching data from ${endpoint}:`, error);
+                showError(`Failed to load data. Please try refreshing the page.`);
+                return [];
+            }
+        }
+
+        // Load all data
+        async function loadAllData() {
+            showLoading(true);
+            
+            try {
+                // Fetch all data in parallel
+                const [schools, teams, individuals] = await Promise.all([
+                    fetchData(API_ENDPOINTS.schools),
+                    fetchData(API_ENDPOINTS.teams),
+                    fetchData(API_ENDPOINTS.individuals)
+                ]);
+                
+                schoolsData = schools;
+                teamsData = teams;
+                individualsData = individuals;
+                
+                showLoading(false);
+                renderMainView();
             } catch (error) {
                 console.error('Error loading data:', error);
-                document.querySelector('.navigation-grid').innerHTML = `
-                    <div style="text-align: center; color: var(--dark-gray);">
-                        <h2>Error loading data</h2>
-                        <p>Please try refreshing the page</p>
+                showError('Failed to load data. Please try refreshing the page.');
+                showLoading(false);
+            }
+        }
+
+        // Show/hide loading indicator
+        function showLoading(show) {
+            isLoading = show;
+            loadingContainer.style.display = show ? 'block' : 'none';
+            navigationGrid.style.display = show ? 'none' : 'grid';
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>${message}</p>
+            `;
+            
+            navigationGrid.innerHTML = '';
+            navigationGrid.appendChild(errorDiv);
+            navigationGrid.style.display = 'block';
+            loadingContainer.style.display = 'none';
+        }
+
+        // Render main view with schools
+        function renderMainView() {
+            navigationHistory = [];
+            updateBreadcrumb();
+            
+            navigationGrid.innerHTML = '';
+            
+            if (!schoolsData || schoolsData.length === 0) {
+                showError('No schools found.');
+                return;
+            }
+            
+            schoolsData.forEach(school => {
+                const card = document.createElement('div');
+                card.className = 'nav-card';
+                
+                // Set school colors based on the data
+                const primaryColor = school.primary_color || 'var(--navy)';
+                const secondaryColor = school.secondary_color || 'var(--gold)';
+                
+                card.innerHTML = `
+                    <div class="nav-card-content school-card-content" style="background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}CC 100%);">
+                        ${school.media_url ? `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('${school.media_url}'); background-size: cover; background-position: center; opacity: 0.2;"></div>` : ''}
+                        <h2 style="color: ${secondaryColor};">${school.name}</h2>
+                        <p>School</p>
                     </div>
                 `;
-            }
-        }
-
-        function renderMainNavigation() {
-            const grid = document.querySelector('.navigation-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            if (navigationHistory.length === 0 && currentData?.schools) {
-                currentData.schools.forEach(school => {
-                    const card = createNavigationCard(school.name, 'School', () => {
-                        navigationHistory.push({ type: 'school', id: school.id });
-                        renderSchoolView(school);
-                    });
-                    grid.appendChild(card);
+                
+                card.addEventListener('click', () => {
+                    navigationHistory.push({ type: 'school', name: school.name });
+                    renderSchoolView(school);
                 });
-            }
+                
+                navigationGrid.appendChild(card);
+            });
+            
+            backButton.style.display = 'none';
         }
 
-        function createNavigationCard(title, type, onClick) {
-            const card = document.createElement('div');
-            card.className = 'nav-card';
-            card.innerHTML = `
-                <div class="nav-card-content">
-                    <h2>${title}</h2>
-                    <p>${type}</p>
-                </div>
-            `;
-            card.addEventListener('click', onClick);
-            return card;
-        }
-
+        // Render school view with sports and athlete options
         function renderSchoolView(school) {
-            const grid = document.querySelector('.navigation-grid');
-            if (!grid || !currentData?.sportCategories) return;
-            grid.innerHTML = '';
-
+            navigationGrid.innerHTML = '';
+            
+            // Get unique sports for this school
+            const schoolTeams = teamsData.filter(team => team.school_name === school.name);
+            const uniqueSports = [...new Set(schoolTeams.map(team => team.sport_name))];
+            
             // Render sports categories
-            currentData.sportCategories.forEach(sport => {
-                const card = createNavigationCard(sport, 'Sport', () => {
+            uniqueSports.forEach(sport => {
+                const card = document.createElement('div');
+                card.className = 'nav-card';
+                
+                // Find any team for this sport to get media
+                const anyTeamForSport = schoolTeams.find(team => team.sport_name === sport);
+                const mediaUrl = anyTeamForSport?.media_url || '';
+                
+                card.innerHTML = `
+                    <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
+                        ${mediaUrl ? `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('${mediaUrl}'); background-size: cover; background-position: center; opacity: 0.3;"></div>` : ''}
+                        <h2 style="color: ${school.secondary_color};">${sport}</h2>
+                        <p>Sport</p>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
                     navigationHistory.push({ type: 'sport', name: sport });
                     renderSportView(school, sport);
                 });
-                grid.appendChild(card);
+                
+                navigationGrid.appendChild(card);
             });
-
-            // Add D1 Athletes card
-            if (school?.athletes?.d1?.length > 0) {
-                const d1Card = createNavigationCard('D1 Athletes', 'Athletes', () => {
-                    showAthletesList(school.athletes.d1);
+            
+            // Get D1 Athletes
+            const d1Athletes = individualsData.filter(individual => 
+                individual.school_name === school.name && individual.type === 'd1_athlete');
+            
+            if (d1Athletes.length > 0) {
+                const d1Card = document.createElement('div');
+                d1Card.className = 'nav-card';
+                
+                d1Card.innerHTML = `
+                    <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
+                        <h2 style="color: ${school.secondary_color};">D1 Athletes</h2>
+                        <p>${d1Athletes.length} Athletes</p>
+                    </div>
+                `;
+                
+                d1Card.addEventListener('click', () => {
+                    showAthletesList(school, d1Athletes, 'D1');
                 });
-                grid.appendChild(d1Card);
+                
+                navigationGrid.appendChild(d1Card);
             }
-
-            // Add Pro Athletes card
-            if (school?.athletes?.pro?.length > 0) {
-                const proCard = createNavigationCard('Pro Athletes', 'Athletes', () => {
-                    showAthletesList(school.athletes.pro);
+            
+            // Get Pro Athletes
+            const proAthletes = individualsData.filter(individual => 
+                individual.school_name === school.name && individual.type === 'pro_athlete');
+            
+            if (proAthletes.length > 0) {
+                const proCard = document.createElement('div');
+                proCard.className = 'nav-card';
+                
+                proCard.innerHTML = `
+                    <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
+                        <h2 style="color: ${school.secondary_color};">Pro Athletes</h2>
+                        <p>${proAthletes.length} Athletes</p>
+                    </div>
+                `;
+                
+                proCard.addEventListener('click', () => {
+                    showAthletesList(school, proAthletes, 'Professional');
                 });
-                grid.appendChild(proCard);
+                
+                navigationGrid.appendChild(proCard);
             }
-
+            
             updateBreadcrumb();
+            backButton.style.display = 'inline-flex';
         }
 
+        // Render sport view with years
         function renderSportView(school, sportName) {
-            const grid = document.querySelector('.navigation-grid');
-            grid.innerHTML = '';
-
-            const sport = Object.values(school.sports).find(s => s.name === sportName);
-            if (sport) {
-                Object.entries(sport.years).forEach(([year, yearData]) => {
-                    const card = createNavigationCard(year, yearData.achievement, () => {
-                        showTeamDetail(school, sport, year, yearData);
-                    });
-                    grid.appendChild(card);
-                });
+            navigationGrid.innerHTML = '';
+            
+            // Get teams for this school and sport
+            const sportTeams = teamsData.filter(team => 
+                team.school_name === school.name && team.sport_name === sportName);
+            
+            if (sportTeams.length === 0) {
+                showError(`No teams found for ${sportName} at ${school.name}.`);
+                return;
             }
-
+            
+            // Sort teams by year (newest first)
+            sportTeams.sort((a, b) => b.year - a.year);
+            
+            sportTeams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'nav-card';
+                
+                card.innerHTML = `
+                    <div class="nav-card-content" style="background: linear-gradient(135deg, ${school.primary_color} 0%, ${school.primary_color}CC 100%);">
+                        ${team.media_url ? `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('${team.media_url}'); background-size: cover; background-position: center; opacity: 0.3;"></div>` : ''}
+                        <h2 style="color: ${school.secondary_color};">${team.year}</h2>
+                        <p>${team.achievement}</p>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    navigationHistory.push({ type: 'year', year: team.year });
+                    showTeamDetail(school, team);
+                });
+                
+                navigationGrid.appendChild(card);
+            });
+            
             updateBreadcrumb();
+            backButton.style.display = 'inline-flex';
+        }
+
+        // Show team detail modal
+        function showTeamDetail(school, team) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            // Get team players
+            const teamPlayers = individualsData.filter(individual => 
+                individual.school_name === school.name && 
+                individual.team_sport === team.sport_name && 
+                individual.team_year === team.year &&
+                individual.type === 'player');
+            
+            modalBody.innerHTML = `
+                <h2>${school.name} ${team.sport_name} - ${team.year}</h2>
+                <h3>${team.achievement}</h3>
+                
+                ${team.team_photo_url ? 
+                    `<img src="${team.team_photo_url}" alt="${school.name} ${team.sport_name} Team" class="team-photo">` : 
+                    ''}
+                
+                <div class="trophy-display">
+                    <div id="trophy-container" class="trophy-container"></div>
+                    <div class="trophy-controls">
+                        <button class="trophy-control-btn" onclick="viewer.controls.reset()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <h3>Team Roster</h3>
+                <div class="team-grid">
+                    ${teamPlayers.map(player => `
+                        <div class="player-card" onclick="showPlayerStats(${JSON.stringify(player).replace(/"/g, '&quot;')})">
+                            ${player.media_url && player.media_url !== 'placeholder_url' ? 
+                                `<img src="${player.media_url}" alt="${player.name}" class="player-img">` : 
+                                '<i class="fas fa-user" style="font-size: 40px; color: var(--navy); margin-bottom: 1rem; display: block;"></i>'}
+                            <h4>${player.name}</h4>
+                            <p>#${player.number} - ${player.position}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+            
+            // Initialize the trophy viewer after the modal is shown
+            setTimeout(() => {
+                window.viewer = new TrophyViewer('trophy-container');
+                if (team.trophy_model_url) {
+                    viewer.loadModel(team.trophy_model_url);
+                }
+            }, 100);
+        }
+
+        // Show player stats
+        function showPlayerStats(player) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            // Get all stats that have values
+            const stats = [];
+            if (player.points_per_game) stats.push(["Points Per Game", player.points_per_game]);
+            if (player.assists) stats.push(["Assists", player.assists]);
+            if (player.rebounds) stats.push(["Rebounds", player.rebounds]);
+            if (player.passing_yards) stats.push(["Passing Yards", player.passing_yards]);
+            if (player.touchdowns) stats.push(["Touchdowns", player.touchdowns]);
+            if (player.completion_percentage) stats.push(["Completion Percentage", player.completion_percentage]);
+            if (player.other_stat_name && player.other_stat_value) 
+                stats.push([player.other_stat_name, player.other_stat_value]);
+            
+            modalBody.innerHTML = `
+                <h2>${player.name}</h2>
+                <h3>#${player.number} - ${player.position}</h3>
+                
+                ${player.media_url && player.media_url !== 'placeholder_url' ? 
+                    `<img src="${player.media_url}" alt="${player.name}" style="max-width: 300px; max-height: 300px; display: block; margin: 1.5rem auto; border-radius: var(--border-radius);">` : ''}
+                
+                <div style="margin-top: 2rem;">
+                    <h4>Statistics</h4>
+                    ${stats.length > 0 ? 
+                        stats.map(([stat, value]) => `
+                            <p>${stat}: ${value}</p>
+                        `).join('') : 
+                        '<p>No statistics available</p>'}
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Show athletes list
+        function showAthletesList(school, athletes, type) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            modalBody.innerHTML = `
+                <h2>${school.name} ${type} Athletes</h2>
+                <div class="team-grid">
+                    ${athletes.map(athlete => `
+                        <div class="player-card">
+                            ${athlete.media_url && athlete.media_url !== 'placeholder_url' ? 
+                                `<img src="${athlete.media_url}" alt="${athlete.name}" class="player-img">` : 
+                                '<i class="fas fa-user" style="font-size: 40px; color: var(--navy); margin-bottom: 1rem; display: block;"></i>'}
+                            <h4>${athlete.name}</h4>
+                            <p>${athlete.sport}</p>
+                            <p>${athlete.college || athlete.professional_team}</p>
+                            <p>Class of ${athlete.graduation_year}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Update breadcrumb
+        function updateBreadcrumb() {
+            let path = ['Home'];
+            
+            navigationHistory.forEach(item => {
+                if (item.type === 'school') {
+                    path.push(item.name);
+                } else if (item.type === 'sport') {
+                    path.push(item.name);
+                } else if (item.type === 'year') {
+                    path.push(item.year);
+                }
+            });
+            
+            breadcrumb.innerHTML = path.join(' <span>/</span> ');
+        }
+
+        // Go back in navigation history
+        function goBack() {
+            if (navigationHistory.length > 0) {
+                navigationHistory.pop();
+                
+                if (navigationHistory.length === 0) {
+                    renderMainView();
+                } else {
+                    const lastItem = navigationHistory[navigationHistory.length - 1];
+                    
+                    if (lastItem.type === 'school') {
+                        const school = schoolsData.find(s => s.name === lastItem.name);
+                        if (school) {
+                            renderSchoolView(school);
+                        }
+                    } else if (lastItem.type === 'sport') {
+                        const schoolItem = navigationHistory.find(item => item.type === 'school');
+                        const school = schoolsData.find(s => s.name === schoolItem.name);
+                        if (school) {
+                            renderSportView(school, lastItem.name);
+                        }
+                    }
+                }
+                
+                updateBreadcrumb();
+            }
         }
 
         // Trophy viewer class
@@ -676,12 +1067,7 @@
                 }
 
                 // Add lights
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                this.scene.add(ambientLight);
-
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                directionalLight.position.set(5, 5, 5);
-                this.scene.add(directionalLight);
+                this.setupLighting();
 
                 // Create a simple trophy shape
                 const baseGeometry = new THREE.CylinderGeometry(0.8, 1, 0.2, 32);
@@ -729,12 +1115,7 @@
                         }
 
                         // Add lights back
-                        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                        this.scene.add(ambientLight);
-
-                        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                        directionalLight.position.set(5, 5, 5);
-                        this.scene.add(directionalLight);
+                        this.setupLighting();
 
                         // Add new model
                         this.scene.add(gltf.scene);
@@ -765,7 +1146,6 @@
                         }
                     },
                     (error) => {
-                        console.error('Error loading model:', error);
                         this.loadingElement.style.display = 'none';
                         this.showError(
                             'Failed to load trophy model',
@@ -788,98 +1168,8 @@
             }
         }
 
-        // Modified showTeamDetail function to use the 3D viewer
-        function showTeamDetail(school, sport, year, yearData) {
-            const modal = document.getElementById('detailModal');
-            const modalBody = modal.querySelector('.modal-body');
-
-            modalBody.innerHTML = `
-                <h2>${school.name} ${sport.name} - ${year}</h2>
-                <h3>${yearData.achievement}</h3>
-                
-                <div class="trophy-display">
-                    <div id="trophy-container" class="trophy-container"></div>
-                    <div class="trophy-controls">
-                        <button class="trophy-control-btn" onclick="viewer.controls.reset()">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="team-grid">
-                    ${yearData.roster.map(player => `
-                        <div class="player-card" onclick="showPlayerStats(${JSON.stringify(player)})">
-                            <h4>${player.name}</h4>
-                            <p>#${player.number} - ${player.position}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-
-            modal.style.display = 'block';
-
-            // Initialize the trophy viewer after the modal is shown
-            setTimeout(() => {
-                window.viewer = new TrophyViewer('trophy-container');
-                if (yearData.trophyModel) {
-                    viewer.loadModel(yearData.trophyModel);
-                }
-            }, 100);
-        }
-
-        function showPlayerStats(player) {
-            const modal = document.getElementById('detailModal');
-            const modalBody = modal.querySelector('.modal-body');
-
-            modalBody.innerHTML = `
-                <h2>${player.name}</h2>
-                <h3>#${player.number} - ${player.position}</h3>
-                
-                <div style="margin-top: 2rem;">
-                    <h4>Statistics</h4>
-                    ${Object.entries(player.stats).map(([stat, value]) => `
-                        <p>${stat.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${value}</p>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        function showAthletesList(athletes) {
-            const modal = document.getElementById('detailModal');
-            const modalBody = modal.querySelector('.modal-body');
-
-            modalBody.innerHTML = `
-                <h2>${athletes[0].college ? 'D1 Athletes' : 'Professional Athletes'}</h2>
-                <div class="team-grid">
-                    ${athletes.map(athlete => `
-                        <div class="player-card">
-                            <h4>${athlete.name}</h4>
-                            <p>${athlete.sport}</p>
-                            <p>${athlete.college || athlete.professional}</p>
-                            <p>Class of ${athlete.graduationYear}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-
-            modal.style.display = 'block';
-        }
-
-        function updateBreadcrumb() {
-            const breadcrumb = document.querySelector('.breadcrumb');
-            let path = ['Home'];
-            
-            navigationHistory.forEach(item => {
-                if (item.type === 'school') {
-                    const school = currentData.schools.find(s => s.id === item.id);
-                    path.push(school.name);
-                } else if (item.type === 'sport') {
-                    path.push(item.name);
-                }
-            });
-
-            breadcrumb.innerHTML = path.join(' <span>/</span> ');
-        }
+        // Event listeners
+        backButton.addEventListener('click', goBack);
 
         // Close modal when clicking the close button or outside the modal
         document.querySelector('.close-modal').addEventListener('click', () => {
@@ -894,7 +1184,7 @@
         });
 
         // Initialize the application
-        loadData();
+        document.addEventListener('DOMContentLoaded', loadAllData);
     </script>
 </body>
 </html>
