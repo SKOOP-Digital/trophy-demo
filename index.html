@@ -1,1332 +1,823 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saginaw Schools Trophy Room</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Add Three.js and GLTFLoader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <style>
-        :root {
-            --navy: #000080;
-            --gold: #FFD700;
-            --black: #000000;
-            --white: #ffffff;
-            --gray: #f5f5f5;
-            --dark-gray: #333333;
-            --light-gray: #f8f9fa;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --modal-bg: rgba(0, 0, 0, 0.85);
-            --transition-speed: 0.3s;
-            --border-radius: 10px;
-            --card-shadow: 0 4px 6px var(--shadow-color);
-            --hover-transform: translateY(-5px);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: var(--light-gray);
-            overflow-x: hidden;
-            color: var(--dark-gray);
-            padding-bottom: 60px; /* Add padding for fixed footer */
-        }
-
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--navy);
-            color: var(--white);
-            padding: 1rem;
-            z-index: 1000;
-            box-shadow: 0 2px 10px var(--shadow-color);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--gold);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .main-content {
-            margin-top: 80px; /* Adjust based on actual header height */
-            padding: 2rem;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            min-height: calc(100vh - 80px - 60px); /* Adjust for header and footer */
-        }
-
-        .navigation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .nav-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            transition: all var(--transition-speed) ease;
-            box-shadow: var(--card-shadow);
-            cursor: pointer;
-            position: relative;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex; /* Use flexbox */
-            flex-direction: column; /* Stack content vertically */
-        }
-
-        .nav-card:hover {
-            transform: var(--hover-transform);
-            box-shadow: 0 8px 12px var(--shadow-color);
-        }
-
-        .nav-card-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background-color: var(--gray); /* Placeholder bg */
-        }
-
-        .nav-card-content {
-            padding: 1.5rem;
-            /* Removed gradient background to simplify */
-            color: var(--dark-gray);
-            flex-grow: 1; /* Allow content to take remaining space */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .nav-card-content h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--navy);
-            /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); */
-        }
-
-        .nav-card-content p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-top: 0.5rem; /* Add some space */
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--modal-bg);
-            z-index: 2000;
-            backdrop-filter: blur(5px);
-            overflow-y: auto; /* Allow modal itself to scroll if content overflows */
-        }
-
-        .modal-content {
-            position: relative; /* Change from absolute */
-            margin: 5% auto; /* Center vertically with margin */
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 1000px;
-            /* max-height: 90vh; */ /* Remove max-height */
-            /* overflow-y: auto; */ /* Remove overflow-y, let modal scroll */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--dark-gray);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-speed) ease;
-            z-index: 10; /* Ensure it's above other modal content */
-        }
-
-        .close-modal:hover {
-            background: var(--gray);
-            transform: rotate(90deg);
-        }
-
-        .trophy-display {
-            perspective: 1000px;
-            margin: 2rem 0;
-            width: 100%;
-            height: 400px; /* Adjusted height */
-            position: relative;
-            background: var(--light-gray);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: inset 0 0 20px var(--shadow-color);
-        }
-
-        .trophy-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        #trophy-canvas {
-            display: block; /* Fix potential inline spacing issues */
-            width: 100%;
-            height: 100%;
-            outline: none;
-        }
-
-        .trophy-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px;
-            border-radius: 30px;
-            z-index: 1;
-            box-shadow: 0 4px 12px var(--shadow-color);
-        }
-
-        .trophy-control-btn {
-            background: var(--navy);
-            border: none;
-            color: var(--gold);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-speed) ease;
-            box-shadow: 0 2px 5px var(--shadow-color);
-        }
-
-        .trophy-control-btn:hover {
-            background: var(--gold);
-            color: var(--navy);
-            transform: translateY(-2px);
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .player-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all var(--transition-speed) ease;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .player-card:hover {
-            background: var(--gold);
-            color: var(--navy);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px var(--shadow-color);
-        }
-
-        .player-card h4 {
-             margin-bottom: 0.5rem;
-        }
-        .player-card p {
-             font-size: 0.9rem;
-             opacity: 0.8;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--navy);
-            color: var(--white);
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 -2px 10px var(--shadow-color);
-            z-index: 1000; /* Ensure it's above content */
-        }
-
-        .breadcrumb {
-            margin-bottom: 2rem;
-            color: var(--dark-gray);
-            padding: 0.5rem 1rem;
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            display: inline-flex;
-            align-items: center;
-            flex-wrap: wrap; /* Allow breadcrumbs to wrap on small screens */
-        }
-
-        .breadcrumb span {
-            margin: 0 0.5rem;
-            color: var(--navy);
-            font-weight: 500;
-        }
-        .breadcrumb a {
-            color: var(--navy);
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .loading-spinner {
-            display: none; /* Initially hidden */
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--gray);
-            border-top: 5px solid var(--navy);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        .error-message {
-             text-align: center;
-             color: #dc3545; /* Bootstrap danger color */
-             background-color: #f8d7da; /* Light red */
-             border: 1px solid #f5c6cb; /* Reddish border */
-             padding: 1rem;
-             border-radius: var(--border-radius);
-             margin-top: 1rem;
-        }
-
-        .trophy-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1.5rem 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 12px var(--shadow-color);
-            z-index: 5; /* Ensure it's above canvas but below controls */
-        }
-
-        .trophy-error {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #ff3333;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            width: 80%;
-            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.2);
-            z-index: 5;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .navigation-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 1.5rem;
-                margin: 20px auto; /* Adjust margin for smaller screens */
-            }
-
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.5rem; /* Reduce gap */
-            }
-            .main-content {
-                 margin-top: 100px; /* Adjust for potentially taller header */
-                 min-height: calc(100vh - 100px - 60px);
-            }
-
-
-            .trophy-display {
-                height: 300px; /* Reduce height on smaller screens */
-            }
-
-            .team-grid {
-                grid-template-columns: 1fr; /* Stack player cards */
-            }
-            .breadcrumb {
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saginaw Schools Trophy Room</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --navy: #000080;
+      --gold: #FFD700;
+      --black: #000000;
+      --white: #ffffff;
+      --gray: #f5f5f5;
+      --dark-gray: #333333;
+      --light-gray: #f8f9fa;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --modal-bg: rgba(0, 0, 0, 0.85);
+      --transition-speed: 0.3s;
+      --border-radius: 10px;
+      --card-shadow: 0 4px 6px var(--shadow-color);
+      --hover-transform: translateY(-5px);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: var(--light-gray);
+      overflow-x: hidden;
+      color: var(--dark-gray);
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--navy);
+      color: var(--white);
+      padding: 1rem;
+      z-index: 1000;
+      box-shadow: 0 2px 10px var(--shadow-color);
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .main-content {
+      margin-top: 80px;
+      padding: 2rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .navigation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .nav-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      transition: all var(--transition-speed) ease;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .nav-card:hover {
+      transform: var(--hover-transform);
+      box-shadow: 0 8px 12px var(--shadow-color);
+    }
+    .nav-card-content {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--navy) 0%, rgba(0, 0, 128, 0.8) 100%);
+      color: var(--white);
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-card-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+      z-index: 1;
+    }
+    .nav-card-content > * {
+      position: relative;
+      z-index: 2;
+    }
+    .nav-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    .nav-card p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--modal-bg);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--white);
+      padding: 2.5rem;
+      border-radius: var(--border-radius);
+      width: 90%;
+      max-width: 1000px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--dark-gray);
+      font-size: 1.5rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-speed) ease;
+    }
+    .close-modal:hover {
+      background: var(--gray);
+      transform: rotate(90deg);
+    }
+    .trophy-display {
+      perspective: 1000px;
+      margin: 2rem 0;
+      width: 100%;
+      height: 500px;
+      position: relative;
+      background: var(--light-gray);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: inset 0 0 20px var(--shadow-color);
+    }
+    .trophy-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    #trophy-canvas {
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+    .trophy-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 12px;
+      border-radius: 30px;
+      z-index: 1;
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+    .trophy-control-btn {
+      background: var(--navy);
+      border: none;
+      color: var(--gold);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-speed) ease;
+      box-shadow: 0 2px 5px var(--shadow-color);
+    }
+    .trophy-control-btn:hover {
+      background: var(--gold);
+      color: var(--navy);
+      transform: translateY(-2px);
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .player-card {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .player-card:hover {
+      background: var(--gold);
+      color: var(--navy);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px var(--shadow-color);
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--navy);
+      color: var(--white);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 -2px 10px var(--shadow-color);
+    }
+    .breadcrumb {
+      margin-bottom: 2rem;
+      color: var(--dark-gray);
+      padding: 0.5rem 1rem;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      display: inline-flex;
+      align-items: center;
+    }
+    .breadcrumb span {
+      margin: 0 0.5rem;
+      color: var(--navy);
+      font-weight: 500;
+    }
+    .loading-spinner {
+      display: none;
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--gray);
+      border-top: 5px solid var(--navy);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+    .trophy-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1.5rem 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+    .trophy-error {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #ff3333;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      width: 80%;
+      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.2);
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 768px) {
+      .navigation-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+      }
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      .trophy-display {
+        height: 400px;
+      }
+      .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">Saginaw Schools Trophy Room</div>
-            <!-- Static nav or placeholder if dynamic nav isn't implemented -->
-        </div>
-    </header>
-
-    <main class="main-content">
-        <div class="breadcrumb">
-            <!-- Breadcrumb will be dynamically populated -->
-        </div>
-
-        <div class="navigation-grid">
-            <!-- Will be dynamically populated -->
-        </div>
-
-        <div class="loading-spinner"></div>
-        <div class="error-message" style="display: none;"></div> <!-- Error message placeholder -->
-    </main>
-
-    <div class="modal" id="detailModal">
-        <div class="modal-content">
-            <button class="close-modal">×</button>
-            <div class="modal-body">
-                <!-- Will be dynamically populated -->
-            </div>
-        </div>
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">Saginaw Schools Trophy Room</div>
+      <nav class="main-nav">
+        <!-- Navigation will be dynamically populated -->
+      </nav>
     </div>
+  </header>
+  <main class="main-content">
+    <div class="breadcrumb">
+      Home
+    </div>
+    <div class="navigation-grid">
+      <!-- Navigation cards are dynamically added here -->
+    </div>
+    <div class="loading-spinner"></div>
+  </main>
+  <div class="modal" id="detailModal">
+    <div class="modal-content">
+      <button class="close-modal">&times;</button>
+      <div class="modal-body">
+        <!-- Modal content is dynamically populated -->
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <p>&copy; 2024 Saginaw Schools Trophy Room. All rights reserved.</p>
+  </footer>
 
-    <footer class="footer">
-        <p>© 2024 Saginaw Schools Trophy Room. All rights reserved.</p>
-    </footer>
+  <!-- Three.js and related libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // Global variables and navigation history
+    let currentData = null;
+    let navigationHistory = [];
 
-    <script>
-        // --- API Configuration ---
-        const API_BASE_URL = 'https://budibase.skoop.digital/api/public/v1/queries';
-        const APP_ID = 'app_3ea495f0892c4311badfd934783afd94';
-        const API_KEY = '69b1bc10c2d32ee607e44e4a30f7f5ea-b9dd09ff6c773a4628f737a0ab45f9e0304e6a8c85181a90f8ff74cc29c946528f373cc83f24ae20'; // Ensure this key is kept secure if this were a production app
+    // Use a proxy to work around CORS issues.
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
-        const API_ENDPOINTS = {
-            schools: 'query_datasource_plus_56025c99333e46b8a073e70585159c4c_4a3b9f6c024c4381afcf9f4e83f85f7d',
-            teams: 'query_datasource_plus_56025c99333e46b8a073e70585159c4c_a47c1c9912c34d15b67e49ec62908fa0',
-            individuals: 'query_datasource_plus_56025c99333e46b8a073e70585159c4c_f62962e3b6ff47e690977d49cd6d6165'
+    // API endpoints for the three tables
+    const schoolsUrl = 'https://budibase.skoop.digital/api/public/v1/queries/query_datasource_plus_56025c99333e46b8a073e70585159c4c_4a3b9f6c024c4381afcf9f4e83f85f7d';
+    const teamsUrl = 'https://budibase.skoop.digital/api/public/v1/queries/query_datasource_plus_56025c99333e46b8a073e70585159c4c_a47c1c9912c34d15b67e49ec62908fa0';
+    const individualsUrl = 'https://budibase.skoop.digital/api/public/v1/queries/query_datasource_plus_56025c99333e46b8a073e70585159c4c_f62962e3b6ff47e690977d49cd6d6165';
+
+    // Helper function to fetch data via POST using the proxy.
+    async function fetchData(apiUrl) {
+      const response = await fetch(proxyUrl + apiUrl, {
+        method: 'POST',
+        headers: {
+          'x-budibase-app-id': 'app_3ea495f0892c4311badfd934783afd94',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'x-budibase-api-key': '69b1bc10c2d32ee607e44e4a30f7f5ea-b9dd09ff6c773a4628f737a0ab45f9e0304e6a8c85181a90f8ff74cc29c946528f373cc83f24ae20'
+        },
+        body: '{}'
+      });
+      return response.json();
+    }
+
+    // Load all data from the API and store it in currentData.
+    async function loadAllData() {
+      try {
+        const [schoolsResponse, teamsResponse, individualsResponse] = await Promise.all([
+          fetchData(schoolsUrl),
+          fetchData(teamsUrl),
+          fetchData(individualsUrl)
+        ]);
+        // Each API returns an array with one element holding the "data" array.
+        currentData = {
+          schools: schoolsResponse[0].data,
+          teams: teamsResponse[0].data,
+          individuals: individualsResponse[0].data
         };
+        renderMainNavigation();
+      } catch (error) {
+        console.error('Error loading data:', error);
+        document.querySelector('.navigation-grid').innerHTML = `
+          <div style="text-align: center; color: var(--dark-gray);">
+            <h2>Error loading data</h2>
+            <p>Please try refreshing the page</p>
+          </div>
+        `;
+      }
+    }
 
-        // --- Global State ---
-        let allSchoolsData = [];
-        let allTeamsData = [];
-        let allIndividualsData = [];
-        let navigationHistory = []; // Stores { type: 'home' | 'school' | 'sport', data: {...} }
-        let currentViewer = null; // To keep track of the Three.js viewer instance
+    // Render the main navigation (list of schools)
+    function renderMainNavigation() {
+      const grid = document.querySelector('.navigation-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      if (navigationHistory.length === 0 && currentData?.schools) {
+        currentData.schools.forEach(school => {
+          const card = createNavigationCard(school.name, 'School', () => {
+            navigationHistory.push({ type: 'school', name: school.name });
+            renderSchoolView(school);
+          });
+          grid.appendChild(card);
+        });
+      }
+      updateBreadcrumb();
+    }
 
-        // --- DOM Elements ---
-        const navigationGrid = document.querySelector('.navigation-grid');
-        const breadcrumbContainer = document.querySelector('.breadcrumb');
-        const loadingSpinner = document.querySelector('.loading-spinner');
-        const errorMessageContainer = document.querySelector('.error-message');
-        const modal = document.getElementById('detailModal');
-        const modalBody = modal.querySelector('.modal-body');
-        const closeModalButton = document.querySelector('.close-modal');
+    // Helper to create a navigation card.
+    function createNavigationCard(title, type, onClick) {
+      const card = document.createElement('div');
+      card.className = 'nav-card';
+      card.innerHTML = `
+        <div class="nav-card-content">
+          <h2>${title}</h2>
+          <p>${type}</p>
+        </div>
+      `;
+      card.addEventListener('click', onClick);
+      return card;
+    }
 
-        // --- API Fetching ---
-        async function fetchData(endpointId) {
-            const url = `${API_BASE_URL}/${endpointId}`;
-            console.log(`Fetching data from: ${url}`);
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'x-budibase-app-id': APP_ID,
-                        'x-budibase-api-key': API_KEY,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({}) // Empty body as per curl example
-                });
+    // When a school is selected, show its sports (derived from the Teams table) and athlete cards.
+    function renderSchoolView(school) {
+      const grid = document.querySelector('.navigation-grid');
+      if (!grid || !currentData?.teams) return;
+      grid.innerHTML = '';
 
-                if (!response.ok) {
-                    // Handle HTTP errors (like 4xx, 5xx)
-                    throw new Error(`HTTP error! Status: ${response.status} for ${endpointId}`);
-                }
+      // Get unique sports for this school.
+      const teamsForSchool = currentData.teams.filter(team => team.school_name === school.name);
+      const sportsSet = new Set(teamsForSchool.map(team => team.sport_name));
+      const sports = Array.from(sportsSet);
+      sports.forEach(sport => {
+        const card = createNavigationCard(sport, 'Sport', () => {
+          navigationHistory.push({ type: 'sport', name: sport });
+          renderSportView(school, sport);
+        });
+        grid.appendChild(card);
+      });
 
-                const result = await response.json();
+      // Add D1 Athletes card if any exist.
+      const d1Athletes = currentData.individuals.filter(ind => ind.school_name === school.name && ind.type === 'd1_athlete');
+      if (d1Athletes.length > 0) {
+        const d1Card = createNavigationCard('D1 Athletes', 'Athletes', () => {
+          navigationHistory.push({ type: 'athlete', category: 'D1' });
+          showAthletesList(d1Athletes);
+        });
+        grid.appendChild(d1Card);
+      }
+      // Add Pro Athletes card if any exist.
+      const proAthletes = currentData.individuals.filter(ind => ind.school_name === school.name && ind.type === 'pro_athlete');
+      if (proAthletes.length > 0) {
+        const proCard = createNavigationCard('Pro Athletes', 'Athletes', () => {
+          navigationHistory.push({ type: 'athlete', category: 'Pro' });
+          showAthletesList(proAthletes);
+        });
+        grid.appendChild(proCard);
+      }
+      updateBreadcrumb();
+    }
 
-                // Check the structure of the response
-                if (!Array.isArray(result) || result.length === 0 || !Array.isArray(result[0].data)) {
-                     console.warn(`Unexpected data structure from ${endpointId}:`, result);
-                     return []; // Return empty array if structure is wrong
-                }
-                console.log(`Successfully fetched data for ${endpointId}:`, result[0].data);
-                return result[0].data; // Extract the actual data array
+    // Render a view for a given sport: list teams (by year) with their achievement.
+    function renderSportView(school, sportName) {
+      const grid = document.querySelector('.navigation-grid');
+      grid.innerHTML = '';
+      const teamsForSport = currentData.teams.filter(team => team.school_name === school.name && team.sport_name === sportName);
+      teamsForSport.forEach(team => {
+        const card = createNavigationCard(team.year, team.achievement, () => {
+          navigationHistory.push({ type: 'team', year: team.year });
+          showTeamDetail(school, team);
+        });
+        grid.appendChild(card);
+      });
+      updateBreadcrumb();
+    }
 
-            } catch (error) {
-                console.error(`Error fetching data from ${endpointId}:`, error);
-                 // Display CORS specific message if fetch fails likely due to it
-                 if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-                     showError(`Failed to fetch data. This might be due to CORS policy restrictions. Ensure the API server allows requests from this origin, or use a CORS proxy.`);
-                 } else {
-                    showError(`Error loading data for ${endpointId}. Please try again later. (${error.message})`);
-                 }
-                throw error; // Re-throw error to be caught by Promise.all
+    // Three.js TrophyViewer class (unchanged from the original)
+    class TrophyViewer {
+      constructor(containerId) {
+        this.container = document.getElementById(containerId);
+        this.setupLoadingState();
+        try {
+          this.renderer = new THREE.WebGLRenderer({ 
+            antialias: true,
+            alpha: true,
+            powerPreference: "high-performance"
+          });
+          this.renderer.physicallyCorrectLights = true;
+          this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+          this.renderer.toneMappingExposure = 1.0;
+          this.renderer.outputEncoding = THREE.sRGBEncoding;
+          this.renderer.shadowMap.enabled = true;
+          this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        } catch (e) {
+          this.showError('WebGL is not supported in your browser');
+          return;
+        }
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0xf8f9fa);
+        this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.container.appendChild(this.renderer.domElement);
+        this.camera.position.set(5, 3, 5);
+        this.camera.lookAt(0, 0, 0);
+        this.setupLighting();
+        this.setupEnvironment();
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.screenSpacePanning = false;
+        this.controls.minDistance = 3;
+        this.controls.maxDistance = 10;
+        this.controls.maxPolarAngle = Math.PI / 1.5;
+        this.controls.target.set(0, 0, 0);
+        window.addEventListener('resize', () => this.onWindowResize(), false);
+        this.animate();
+      }
+      setupLighting() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambientLight);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        mainLight.position.set(5, 5, 5);
+        mainLight.castShadow = true;
+        mainLight.shadow.mapSize.width = 2048;
+        mainLight.shadow.mapSize.height = 2048;
+        mainLight.shadow.camera.near = 0.5;
+        mainLight.shadow.camera.far = 500;
+        mainLight.shadow.bias = -0.0001;
+        this.scene.add(mainLight);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+        fillLight.position.set(-5, 0, -5);
+        this.scene.add(fillLight);
+        const topLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        topLight.position.set(0, 10, 0);
+        this.scene.add(topLight);
+        const groundReflection = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.3);
+        this.scene.add(groundReflection);
+      }
+      setupEnvironment() {
+        const vertexShader = `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `;
+        const fragmentShader = `
+          varying vec2 vUv;
+          void main() {
+            vec3 topColor = vec3(0.95, 0.95, 0.95);
+            vec3 bottomColor = vec3(0.85, 0.85, 0.85);
+            gl_FragColor = vec4(mix(bottomColor, topColor, vUv.y), 1.0);
+          }
+        `;
+        const uniforms = {};
+        const backgroundMaterial = new THREE.ShaderMaterial({
+          vertexShader,
+          fragmentShader,
+          uniforms,
+          side: THREE.BackSide
+        });
+        const backgroundGeometry = new THREE.SphereGeometry(100, 32, 32);
+        const background = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
+        this.scene.add(background);
+        const groundGeometry = new THREE.PlaneGeometry(100, 100);
+        const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -2;
+        ground.receiveShadow = true;
+        this.scene.add(ground);
+      }
+      setupLoadingState() {
+        this.loadingElement = document.createElement('div');
+        this.loadingElement.className = 'trophy-loading';
+        this.loadingElement.innerHTML = `
+          <div class="loading-spinner"></div>
+          <p>Loading trophy model...</p>
+        `;
+        this.container.appendChild(this.loadingElement);
+      }
+      showError(message, details = '') {
+        console.error('Trophy Viewer Error:', message, details);
+        const errorElement = document.createElement('div');
+        errorElement.className = 'trophy-error';
+        errorElement.innerHTML = `
+          <h3>Error Loading Trophy</h3>
+          <p>${message}</p>
+          <p>Please try refreshing the page</p>
+          ${details ? `<small style="color: #666; margin-top: 10px; display: block;">${details}</small>` : ''}
+        `;
+        this.container.appendChild(errorElement);
+        this.createFallbackTrophy();
+      }
+      createFallbackTrophy() {
+        while(this.scene.children.length > 0){ 
+          this.scene.remove(this.scene.children[0]); 
+        }
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        this.scene.add(directionalLight);
+        const baseGeometry = new THREE.CylinderGeometry(0.8, 1, 0.2, 32);
+        const stemGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2, 32);
+        const bowlGeometry = new THREE.CylinderGeometry(1, 0.3, 1, 32);
+        const material = new THREE.MeshStandardMaterial({
+          color: 0xffd700,
+          metalness: 1,
+          roughness: 0.3,
+        });
+        const base = new THREE.Mesh(baseGeometry, material);
+        const stem = new THREE.Mesh(stemGeometry, material);
+        const bowl = new THREE.Mesh(bowlGeometry, material);
+        base.position.y = -1.5;
+        stem.position.y = 0;
+        bowl.position.y = 1.5;
+        const trophyGroup = new THREE.Group();
+        trophyGroup.add(base);
+        trophyGroup.add(stem);
+        trophyGroup.add(bowl);
+        this.scene.add(trophyGroup);
+      }
+      loadModel(url) {
+        this.loadingElement.style.display = 'block';
+        const existingErrors = this.container.querySelectorAll('.trophy-error');
+        existingErrors.forEach(el => el.remove());
+        const loader = new THREE.GLTFLoader();
+        loader.load(
+          url,
+          (gltf) => {
+            this.loadingElement.style.display = 'none';
+            while(this.scene.children.length > 0){ 
+              this.scene.remove(this.scene.children[0]); 
             }
-        }
-
-        async function loadAllData() {
-            showLoading();
-            clearError();
-            try {
-                // Fetch all data concurrently
-                const [schools, teams, individuals] = await Promise.all([
-                    fetchData(API_ENDPOINTS.schools),
-                    fetchData(API_ENDPOINTS.teams),
-                    fetchData(API_ENDPOINTS.individuals)
-                ]);
-
-                // Store fetched data globally
-                allSchoolsData = schools;
-                allTeamsData = teams;
-                allIndividualsData = individuals;
-
-                console.log("All data loaded:", { schools, teams, individuals });
-
-                // Start rendering from the home/school level
-                renderHomeView();
-
-            } catch (error) {
-                // Error already logged and shown by fetchData
-                console.error("Failed to load initial data.", error);
-                // No need to call showError here again unless providing a summary error
-            } finally {
-                hideLoading();
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            this.scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5);
+            this.scene.add(directionalLight);
+            this.scene.add(gltf.scene);
+            const box = new THREE.Box3().setFromObject(gltf.scene);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const scale = 3 / maxDim;
+            gltf.scene.scale.set(scale, scale, scale);
+            gltf.scene.position.x = -center.x * scale;
+            gltf.scene.position.y = -center.y * scale;
+            gltf.scene.position.z = -center.z * scale;
+            this.controls.reset();
+          },
+          (xhr) => {
+            if (xhr.lengthComputable) {
+              const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
+              this.loadingElement.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p>Loading trophy model... ${percent}%</p>
+              `;
             }
-        }
-
-        // --- Rendering Logic ---
-
-        function renderHomeView() {
-            navigationHistory = [{ type: 'home', data: null }];
-            navigationGrid.innerHTML = ''; // Clear previous content
-
-             if (!allSchoolsData || allSchoolsData.length === 0) {
-                showError("No school data available.");
-                updateBreadcrumb();
-                return;
-             }
-
-            allSchoolsData.forEach(school => {
-                const card = createNavigationCard(
-                    school.name,
-                    'School',
-                    school.media_url, // Pass media_url
-                    () => {
-                        navigationHistory.push({ type: 'school', data: school });
-                        renderSchoolView(school);
-                    }
-                );
-                navigationGrid.appendChild(card);
-            });
-            updateBreadcrumb();
-        }
-
-        function createNavigationCard(title, type, imageUrl, onClick) {
-            const card = document.createElement('div');
-            card.className = 'nav-card';
-
-            // Basic image handling (replace with actual image or placeholder)
-            const img = document.createElement('img');
-            img.className = 'nav-card-image';
-            img.src = imageUrl && imageUrl !== 'placeholder_url' ? imageUrl : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='; // Use placeholder if no URL
-            img.alt = title;
-            img.onerror = (e) => { e.target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='; }; // Fallback on error
-
-            card.innerHTML = `
-                ${img.outerHTML}
-                <div class="nav-card-content">
-                    <div> <!-- Wrapper for top content -->
-                        <h2>${title}</h2>
-                        <p>${type}</p>
-                    </div>
-                    <!-- Could add more info here if needed -->
-                </div>
-            `;
-            card.addEventListener('click', onClick);
-            return card;
-        }
-
-         function renderSchoolView(school) {
-             navigationGrid.innerHTML = ''; // Clear previous content
-
-             // 1. Find teams for this school
-             const schoolTeams = allTeamsData.filter(team => team.school_name === school.name);
-             const uniqueSports = [...new Set(schoolTeams.map(team => team.sport_name))];
-
-             // 2. Create cards for each unique sport
-             uniqueSports.forEach(sportName => {
-                 // Find one representative team for the sport to potentially get an image URL
-                 const representativeTeam = schoolTeams.find(team => team.sport_name === sportName);
-                 const card = createNavigationCard(
-                     sportName,
-                     'Sport',
-                     representativeTeam?.media_url, // Use team media URL if available
-                     () => {
-                         navigationHistory.push({ type: 'sport', data: { schoolName: school.name, sportName: sportName } });
-                         renderSportView(school.name, sportName);
-                     }
-                 );
-                 navigationGrid.appendChild(card);
-             });
-
-             // 3. Find D1 and Pro athletes for this school
-             const schoolAthletes = allIndividualsData.filter(ind => ind.school_name === school.name);
-             const d1Athletes = schoolAthletes.filter(ind => ind.type === 'd1_athlete');
-             const proAthletes = schoolAthletes.filter(ind => ind.type === 'pro_athlete');
-
-             // 4. Create cards for D1/Pro athletes if they exist
-             if (d1Athletes.length > 0) {
-                 const d1Card = createNavigationCard(
-                     'D1 Athletes',
-                     `${d1Athletes.length} Athlete(s)`,
-                     null, // No specific image for the category card
-                     () => showAthletesList(d1Athletes, 'D1 Athletes')
-                 );
-                 navigationGrid.appendChild(d1Card);
-             }
-             if (proAthletes.length > 0) {
-                 const proCard = createNavigationCard(
-                     'Pro Athletes',
-                     `${proAthletes.length} Athlete(s)`,
-                     null, // No specific image for the category card
-                     () => showAthletesList(proAthletes, 'Professional Athletes')
-                 );
-                 navigationGrid.appendChild(proCard);
-             }
-
-             updateBreadcrumb();
-         }
-
-        function renderSportView(schoolName, sportName) {
-            navigationGrid.innerHTML = ''; // Clear previous content
-
-            // Filter teams for the specific school and sport
-            const sportTeams = allTeamsData.filter(team =>
-                team.school_name === schoolName && team.sport_name === sportName
+          },
+          (error) => {
+            console.error('Error loading model:', error);
+            this.loadingElement.style.display = 'none';
+            this.showError(
+              'Failed to load trophy model',
+              `URL: ${url}\nStatus: ${error.target?.status || 'unknown'}\nType: ${error.type || 'unknown'}`
             );
+          }
+        );
+      }
+      onWindowResize() {
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+      }
+      animate() {
+        requestAnimationFrame(() => this.animate());
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+    }
 
-            // Sort teams by year, descending
-            sportTeams.sort((a, b) => (b.year || 0) - (a.year || 0));
-
-            if (sportTeams.length === 0) {
-                 navigationGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">No team data found for ${sportName} in ${schoolName}.</p>`;
-                 updateBreadcrumb();
-                 return;
-            }
-
-            // Create cards for each year/team
-            sportTeams.forEach(team => {
-                const card = createNavigationCard(
-                    team.year,
-                    team.achievement || 'View Details', // Display achievement or default text
-                    team.team_photo_url || team.media_url, // Use team photo or general media URL
-                    () => showTeamDetail(team) // Pass the specific team object
-                );
-                navigationGrid.appendChild(card);
-            });
-
-            updateBreadcrumb();
+    // When a team is clicked, show its details in a modal.
+    function showTeamDetail(school, team) {
+      const modal = document.getElementById('detailModal');
+      const modalBody = modal.querySelector('.modal-body');
+      // Get the team roster (players) from Individuals.
+      const roster = currentData.individuals.filter(ind => 
+        ind.school_name === school.name &&
+        ind.team_sport === team.sport_name &&
+        ind.team_year === team.year &&
+        ind.type === 'player'
+      );
+      modalBody.innerHTML = `
+        <h2>${school.name} ${team.sport_name} - ${team.year}</h2>
+        <h3>${team.achievement}</h3>
+        <div class="trophy-display">
+          <div id="trophy-container" class="trophy-container"></div>
+          <div class="trophy-controls">
+            <button class="trophy-control-btn" onclick="viewer.controls.reset()">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        <div class="team-grid">
+          ${roster.map(player => `
+            <div class="player-card" onclick='showPlayerStats(${JSON.stringify(player)})'>
+              <h4>${player.name}</h4>
+              <p>#${player.number} - ${player.position}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      modal.style.display = 'block';
+      setTimeout(() => {
+        window.viewer = new TrophyViewer('trophy-container');
+        if (team.trophy_model_url) {
+          viewer.loadModel(team.trophy_model_url);
         }
+      }, 100);
+    }
 
-        // --- Modal Display Logic ---
-
-        function showTeamDetail(teamData) {
-             // Find players for this specific team (school, sport, year)
-             const roster = allIndividualsData.filter(ind =>
-                 ind.school_name === teamData.school_name &&
-                 ind.team_sport === teamData.sport_name && // Assuming team_sport matches sport_name
-                 ind.team_year === teamData.year &&
-                 ind.type === 'player' // Ensure we only get players
-             );
-
-             modalBody.innerHTML = `
-                 <h2>${teamData.school_name} ${teamData.sport_name} - ${teamData.year}</h2>
-                 <h3>${teamData.achievement || 'Team Details'}</h3>
-                 ${teamData.team_photo_url ? `<img src="${teamData.team_photo_url}" alt="${teamData.year} Team Photo" style="max-width: 100%; height: auto; margin-bottom: 1rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow);">` : ''}
-
-                 ${teamData.trophy_model_url ? `
-                 <div class="trophy-display">
-                     <div id="trophy-container" class="trophy-container"></div>
-                     <div class="trophy-controls">
-                         <button class="trophy-control-btn" title="Reset View" onclick="if(currentViewer && currentViewer.controls) { currentViewer.controls.reset(); }">
-                             <i class="fas fa-sync-alt"></i>
-                         </button>
-                         <!-- Add more controls if needed -->
-                     </div>
-                 </div>
-                 ` : '<p style="text-align: center; margin: 2rem 0;">No 3D trophy model available for this team.</p>'}
-
-                 <h4>Roster</h4>
-                 ${roster.length > 0 ? `
-                 <div class="team-grid">
-                     ${roster.map(player => `
-                         <div class="player-card" onclick='showPlayerStats(${JSON.stringify(player)})'>
-                              ${player.media_url && player.media_url !== 'placeholder_url' ? `<img src="${player.media_url}" alt="${player.name}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; background-color: var(--gray);">` : '<div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--gray); margin-bottom: 10px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user" style="font-size: 24px; color: var(--dark-gray);"></i></div>'}
-                             <h4>${player.name || 'N/A'}</h4>
-                             <p>${player.number ? `#${player.number} ` : ''}${player.position || 'N/A'}</p>
-                         </div>
-                     `).join('')}
-                 </div>
-                 ` : '<p>No player roster information available for this team.</p>'}
-             `;
-
-             openModal();
-
-             // Initialize the trophy viewer AFTER the modal is visible and container exists
-             if (teamData.trophy_model_url) {
-                 // Use setTimeout to ensure the DOM is fully updated
-                 setTimeout(() => {
-                     const trophyContainer = document.getElementById('trophy-container');
-                     if (trophyContainer) {
-                         // Clean up previous viewer if it exists
-                         if (currentViewer && currentViewer.dispose) {
-                            currentViewer.dispose();
-                         }
-                         currentViewer = new TrophyViewer('trophy-container');
-                         currentViewer.loadModel(teamData.trophy_model_url);
-                     } else {
-                         console.error("Trophy container not found after modal open.");
-                     }
-                 }, 100); // Small delay
-             } else {
-                 currentViewer = null; // No viewer needed
-             }
-         }
-
-
-        function showPlayerStats(player) {
-            // Define fields that are considered stats vs identifiers
-            const identifierFields = ['_id', 'rowNumber', 'table', 'school_name', 'team_sport', 'team_year', 'type', 'name', 'media_url', 'number', 'position', 'graduation_year', 'sport', 'college', 'professional_team'];
-            let statsHtml = '';
-
-            for (const key in player) {
-                if (!identifierFields.includes(key) && player[key] !== "" && player[key] !== null) {
-                    // Format the key nicely (e.g., points_per_game -> Points Per Game)
-                    const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    statsHtml += `<p><strong>${formattedKey}:</strong> ${player[key]}</p>`;
-                }
+    // Display individual player stats in the modal.
+    function showPlayerStats(player) {
+      const modal = document.getElementById('detailModal');
+      const modalBody = modal.querySelector('.modal-body');
+      modalBody.innerHTML = `
+        <h2>${player.name}</h2>
+        <h3>#${player.number} - ${player.position}</h3>
+        <div style="margin-top: 2rem;">
+          <h4>Statistics</h4>
+          ${Object.entries(player).map(([stat, value]) => {
+            const excluded = ['school_name','team_sport','team_year','type','name','media_url','number','position','graduation_year','sport','college','professional_team'];
+            if (!excluded.includes(stat) && value) {
+              return `<p>${stat.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${value}</p>`;
             }
+            return '';
+          }).join('')}
+        </div>
+      `;
+    }
 
-             // Special handling for D1/Pro specific fields if needed, although stats loop should cover them
-             if (player.college && !statsHtml.includes('College')) { // Check if already included by loop
-                 statsHtml += `<p><strong>College:</strong> ${player.college}</p>`;
-             }
-              if (player.professional_team && !statsHtml.includes('Professional Team')) {
-                 statsHtml += `<p><strong>Professional Team:</strong> ${player.professional_team}</p>`;
-             }
+    // Show a list of athletes (D1 or Pro) in the modal.
+    function showAthletesList(athletes) {
+      const modal = document.getElementById('detailModal');
+      const modalBody = modal.querySelector('.modal-body');
+      modalBody.innerHTML = `
+        <h2>${athletes[0].type === 'd1_athlete' ? 'D1 Athletes' : 'Professional Athletes'}</h2>
+        <div class="team-grid">
+          ${athletes.map(athlete => `
+            <div class="player-card">
+              <h4>${athlete.name}</h4>
+              <p>${athlete.sport || ''}</p>
+              <p>${athlete.college || athlete.professional_team || ''}</p>
+              <p>Class of ${athlete.graduation_year}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      modal.style.display = 'block';
+    }
 
-
-            if (statsHtml === '') {
-                statsHtml = '<p>No specific statistics available for this player.</p>';
-            }
-
-            modalBody.innerHTML = `
-                ${player.media_url && player.media_url !== 'placeholder_url' ? `<img src="${player.media_url}" alt="${player.name}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem auto; display: block; background-color: var(--gray);">` : '<div style="width: 100px; height: 100px; border-radius: 50%; background-color: var(--gray); margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user" style="font-size: 40px; color: var(--dark-gray);"></i></div>'}
-                <h2>${player.name || 'N/A'}</h2>
-                <h3>${player.number ? `#${player.number} ` : ''}${player.position || (player.sport || '')}</h3>
-                ${player.graduation_year ? `<p>Class of ${player.graduation_year}</p>`: ''}
-
-                <div style="margin-top: 2rem; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
-                    <h4>Details & Statistics</h4>
-                    ${statsHtml}
-                </div>
-            `;
-            // Modal is already open, just update content. No need to call openModal() again.
+    // Update the breadcrumb navigation.
+    function updateBreadcrumb() {
+      const breadcrumb = document.querySelector('.breadcrumb');
+      let path = ['Home'];
+      navigationHistory.forEach(item => {
+        if (item.type === 'school') {
+          path.push(item.name);
+        } else if (item.type === 'sport') {
+          path.push(item.name);
+        } else if (item.type === 'team') {
+          path.push(item.year);
+        } else if (item.type === 'athlete') {
+          path.push(item.category + ' Athletes');
         }
-
-        function showAthletesList(athletes, title) {
-            modalBody.innerHTML = `
-                <h2>${title}</h2>
-                <div class="team-grid">
-                    ${athletes.map(athlete => `
-                        <div class="player-card" onclick='showPlayerStats(${JSON.stringify(athlete)})'>
-                            ${athlete.media_url && athlete.media_url !== 'placeholder_url' ? `<img src="${athlete.media_url}" alt="${athlete.name}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; background-color: var(--gray);">` : '<div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--gray); margin-bottom: 10px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user" style="font-size: 24px; color: var(--dark-gray);"></i></div>'}
-                            <h4>${athlete.name}</h4>
-                            <p>${athlete.sport || 'N/A'}</p>
-                            <p>${athlete.college || athlete.professional_team || 'N/A'}</p>
-                            <p>Class of ${athlete.graduationYear || athlete.graduation_year || 'N/A'}</p> <!-- Handle potential inconsistencies -->
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            openModal();
-        }
-
-        // --- Trophy Viewer Class ---
-        class TrophyViewer {
-            constructor(containerId) {
-                this.container = document.getElementById(containerId);
-                if (!this.container) {
-                    console.error(`Trophy container #${containerId} not found.`);
-                    this.showError('Internal error: Display area not found.');
-                    return;
-                }
-                this.setupLoadingState();
-
-                // Check WebGL support
-                try {
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                    if (!context) {
-                        throw new Error('WebGL not supported');
-                    }
-                    this.renderer = new THREE.WebGLRenderer({
-                        antialias: true,
-                        alpha: true, // Allow transparency for background
-                        powerPreference: "high-performance",
-                        canvas: document.createElement('canvas') // Create canvas internally
-                    });
-                    this.renderer.physicallyCorrectLights = true;
-                    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-                    this.renderer.toneMappingExposure = 1.0;
-                    this.renderer.outputEncoding = THREE.sRGBEncoding;
-                    this.renderer.shadowMap.enabled = true;
-                    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-                } catch (e) {
-                    console.error("WebGL initialization failed:", e);
-                    this.showError('WebGL is not supported or enabled in your browser.');
-                    this.renderer = null; // Ensure renderer is null if failed
-                    return;
-                }
-
-                this.scene = new THREE.Scene();
-                // Keep scene background transparent, rely on CSS background of container
-                // this.scene.background = new THREE.Color(0xf8f9fa); // Or set a color if needed
-                this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
-
-                // Set up renderer size and append its canvas
-                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-                this.renderer.setPixelRatio(window.devicePixelRatio);
-                this.renderer.domElement.id = 'trophy-canvas'; // Add ID for potential styling/selection
-                this.container.appendChild(this.renderer.domElement);
-
-
-                // Set up camera position
-                this.camera.position.set(0, 1, 5); // Adjusted initial position
-                this.camera.lookAt(0, 0.5, 0); // Look slightly higher than origin if trophy base is at 0
-
-                // Add lights
-                this.setupLighting();
-
-                // Add environment map (optional but improves reflections)
-                // this.setupEnvironment(); // Disabled for simplicity, enable if needed
-
-                // Add controls
-                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-                this.controls.enableDamping = true;
-                this.controls.dampingFactor = 0.05;
-                this.controls.screenSpacePanning = false;
-                this.controls.minDistance = 2; // Allow closer zoom
-                this.controls.maxDistance = 15;
-                this.controls.maxPolarAngle = Math.PI / 1.7; // Allow looking slightly more from top
-                this.controls.target.set(0, 0.5, 0); // Match camera lookAt
-
-                // Handle window resize using ResizeObserver for container changes
-                this.resizeObserver = new ResizeObserver(() => this.onWindowResize());
-                this.resizeObserver.observe(this.container);
-
-                // Start animation loop
-                this.animate = this.animate.bind(this); // Bind context
-                this.animationFrameId = requestAnimationFrame(this.animate);
-                
-                this.model = null; // To hold the loaded model
-            }
-
-            setupLighting() {
-                // Ambient light
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-                this.scene.add(ambientLight);
-
-                // Key light
-                const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
-                keyLight.position.set(-5, 5, 5);
-                keyLight.castShadow = true;
-                keyLight.shadow.mapSize.width = 1024; // Adjusted shadow map size
-                keyLight.shadow.mapSize.height = 1024;
-                keyLight.shadow.camera.near = 0.5;
-                keyLight.shadow.camera.far = 50;
-                // keyLight.shadow.bias = -0.001; // Adjust if shadow acne occurs
-                this.scene.add(keyLight);
-
-                // Fill light
-                const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
-                fillLight.position.set(5, 2, 3);
-                this.scene.add(fillLight);
-
-                // Rim light (optional)
-                const rimLight = new THREE.DirectionalLight(0xffffff, 0.4);
-                rimLight.position.set(0, 5, -5);
-                this.scene.add(rimLight);
-            }
-
-            // setupEnvironment() { ... } // Keep original if needed
-
-             setupLoadingState() {
-                // Remove existing loading/error states first
-                this.removeStatusElements();
-
-                this.loadingElement = document.createElement('div');
-                this.loadingElement.className = 'trophy-loading';
-                this.loadingElement.innerHTML = `
-                    <div class="loading-spinner" style="display: block;"></div>
-                    <p>Loading trophy model...</p>
-                `;
-                // Ensure the container is positioned relatively if not already
-                if (window.getComputedStyle(this.container).position === 'static') {
-                    this.container.style.position = 'relative';
-                }
-                this.container.appendChild(this.loadingElement);
-            }
-
-            removeStatusElements() {
-                 const loading = this.container.querySelector('.trophy-loading');
-                 const error = this.container.querySelector('.trophy-error');
-                 if (loading) loading.remove();
-                 if (error) error.remove();
-                 this.loadingElement = null;
-                 this.errorElement = null;
-            }
-
-
-            showError(message, details = '') {
-                 console.error('Trophy Viewer Error:', message, details);
-                 this.removeStatusElements(); // Clear loading state
-
-                 this.errorElement = document.createElement('div');
-                 this.errorElement.className = 'trophy-error';
-                 this.errorElement.innerHTML = `
-                     <h3>Error Loading Trophy</h3>
-                     <p>${message}</p>
-                     ${details ? `<small style="color: #666; margin-top: 10px; display: block; white-space: pre-wrap;">${details}</small>` : ''}
-                     <p style="margin-top: 10px;">Displaying fallback trophy.</p>
-                 `;
-                  // Ensure the container is positioned relatively if not already
-                 if (window.getComputedStyle(this.container).position === 'static') {
-                    this.container.style.position = 'relative';
-                 }
-                 this.container.appendChild(this.errorElement);
-
-                 // Only create fallback if renderer exists
-                 if (this.renderer && this.scene) {
-                    this.createFallbackTrophy();
-                 }
-            }
-
-
-             createFallbackTrophy() {
-                 // Clear existing model
-                 this.clearScene();
-
-                 // Add lights back (if cleared) - assuming lights persist unless scene is remade
-                 if (!this.scene.getObjectByName('ambientLight')) { // Check if lights need re-adding
-                    this.setupLighting();
-                 }
-
-                 // Create a simple trophy shape
-                 const baseGeometry = new THREE.CylinderGeometry(0.6, 0.8, 0.2, 32);
-                 const stemGeometry = new THREE.CylinderGeometry(0.15, 0.15, 1.0, 32);
-                 const bowlBaseGeometry = new THREE.SphereGeometry(0.4, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2); // Half sphere
-                 const bowlTopGeometry = new THREE.CylinderGeometry(0.4, 0.7, 0.5, 32);
-
-
-                 const material = new THREE.MeshStandardMaterial({
-                     color: 0xffd700, // Gold
-                     metalness: 0.8,
-                     roughness: 0.3,
-                     envMapIntensity: 0.5 // Add some reflection if env map is set up
-                 });
-
-                 const base = new THREE.Mesh(baseGeometry, material);
-                 const stem = new THREE.Mesh(stemGeometry, material);
-                 const bowlBase = new THREE.Mesh(bowlBaseGeometry, material);
-                 const bowlTop = new THREE.Mesh(bowlTopGeometry, material);
-
-
-                 base.position.y = 0.1; // Base sits on ground
-                 stem.position.y = base.position.y + 0.1 + 0.5; // Stem on top of base
-                 bowlBase.position.y = stem.position.y + 0.5; // Bowl base on top of stem
-                 bowlBase.rotation.x = Math.PI; // Flip sphere upside down
-                 bowlTop.position.y = bowlBase.position.y + 0.25; // Top part of bowl
-
-                 const trophyGroup = new THREE.Group();
-                 trophyGroup.add(base);
-                 trophyGroup.add(stem);
-                 trophyGroup.add(bowlBase);
-                 trophyGroup.add(bowlTop);
-
-                 trophyGroup.castShadow = true;
-                 trophyGroup.receiveShadow = true;
-                 trophyGroup.traverse(node => {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = true;
-                    }
-                 });
-
-
-                 this.scene.add(trophyGroup);
-                 this.model = trophyGroup; // Store reference to the fallback model
-
-                 // Add a simple ground plane for shadows
-                 this.addGroundPlane();
-             }
-
-            addGroundPlane() {
-                if (!this.scene.getObjectByName("groundPlane")) {
-                    const groundGeometry = new THREE.PlaneGeometry(20, 20);
-                    // ShadowMaterial only receives shadows, doesn't cast or reflect light well
-                    // const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.4 });
-                    // Use MeshStandardMaterial for better look and shadow receiving
-                     const groundMaterial = new THREE.MeshStandardMaterial({
-                        color: 0xaaaaaa, // Mid-gray
-                        roughness: 0.9,
-                        metalness: 0.1
-                    });
-                    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-                    ground.rotation.x = -Math.PI / 2;
-                    ground.position.y = 0; // Ground at y=0
-                    ground.receiveShadow = true;
-                    ground.name = "groundPlane";
-                    this.scene.add(ground);
-                }
-            }
-
-            clearScene() {
-                 // Remove the previously loaded model if it exists
-                 if (this.model) {
-                    this.scene.remove(this.model);
-                    // Dispose geometry and material if necessary (important for complex models)
-                    this.model.traverse(child => {
-                        if (child.isMesh) {
-                            child.geometry.dispose();
-                            if (child.material.isMaterial) {
-                                // cleanMaterial(child.material) // Helper function needed for complex materials
-                            } else {
-                                // for multi-material objects
-                                for (const material of child.material) {
-                                     // cleanMaterial(material)
-                                 }
-                            }
-                        }
-                    });
-                    this.model = null;
-                 }
-                 // Optionally remove other generated objects like ground plane if needed
-                 const ground = this.scene.getObjectByName("groundPlane");
-                 if (ground) this.scene.remove(ground);
-            }
-
-
-            loadModel(url) {
-                 if (!this.renderer || !this.scene) {
-                    console.error("Cannot load model, renderer or scene not initialized.");
-                    this.showError("Internal error: Viewer not ready.");
-                    return;
-                 }
-                 this.setupLoadingState(); // Show loading spinner
-                 this.clearScene(); // Remove previous model/fallback
-
-                 const loader = new THREE.GLTFLoader();
-                 loader.load(
-                     url,
-                     (gltf) => {
-                         this.removeStatusElements(); // Hide loading spinner on success
-                         this.model = gltf.scene; // Store reference to the new model
-
-                         // Center and scale model
-                         const box = new THREE.Box3().setFromObject(this.model);
-                         const size = box.getSize(new THREE.Vector3());
-                         const center = box.getCenter(new THREE.Vector3());
-
-                         const maxDim = Math.max(size.x, size.y, size.z);
-                         const desiredHeight = 2.0; // Set desired height for the trophy (adjust as needed)
-                         const scale = desiredHeight / size.y; // Scale based on height initially
-
-                        // // Apply scale and position adjustments
-                        // this.model.scale.multiplyScalar(scale);
-                        // // Adjust position to center and sit on y=0
-                        // this.model.position.x = -center.x * scale;
-                        // this.model.position.y = -box.min.y * scale; // Move bottom of bounding box to y=0
-                        // this.model.position.z = -center.z * scale;
-
-                        //Alternative: Center based on bounding box, then move up
-                         this.model.scale.set(scale, scale, scale);
-                         box.setFromObject(this.model); // Recompute box after scaling
-                         box.getCenter(center); // Recompute center
-                         this.model.position.sub(center); // Center the model at origin
-                         this.model.position.y += size.y * scale / 2; // Move it up so base is near y=0
-
-
-                         // Enable shadows for all meshes in the model
-                         this.model.traverse((node) => {
-                             if (node.isMesh) {
-                                 node.castShadow = true;
-                                 node.receiveShadow = true; // Meshes can receive shadows too
-                                 // Optional: optimize materials if needed
-                                //  node.material.metalness = Math.max(node.material.metalness, 0.2);
-                                //  node.material.roughness = Math.min(node.material.roughness, 0.8);
-                             }
-                         });
-
-                         this.scene.add(this.model);
-                         this.addGroundPlane(); // Add ground plane for shadows
-
-                         // Optional: Reset controls to focus on the new model
-                         this.controls.target.copy(this.model.position); // Target the model's new position (often near origin or slightly above)
-                         // Adjust camera position based on model size if needed
-                         this.camera.position.set(0, size.y * scale * 0.75, size.z * scale * 1.5 + 2); // Example position relative to size
-                         this.controls.update();
-
-                         console.log("Model loaded successfully:", url);
-                     },
-                     (xhr) => {
-                         // Update loading progress
-                         if (xhr.lengthComputable && this.loadingElement) {
-                             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
-                             const pTag = this.loadingElement.querySelector('p');
-                             if (pTag) pTag.textContent = `Loading trophy model... ${percent}%`;
-                         }
-                     },
-                     (error) => {
-                         console.error('Error loading GLTF model:', error);
-                         // Extract more error details if possible
-                         let details = `URL: ${url}\n`;
-                         if (error.target && error.target.status) {
-                            details += `Status: ${error.target.status} ${error.target.statusText}\n`;
-                         }
-                         details += `Message: ${error.message || 'Unknown loading error'}`;
-
-                         this.removeStatusElements(); // Remove loading indicator
-                         this.showError('Failed to load trophy model.', details);
-                     }
-                 );
-             }
-
-            onWindowResize() {
-                 if (!this.renderer || !this.camera || !this.container) return;
-
-                 const width = this.container.clientWidth;
-                 const height = this.container.clientHeight;
-
-                 this.camera.aspect = width / height;
-                 this.camera.updateProjectionMatrix();
-                 this.renderer.setSize(width, height);
-                 // No need to set pixel ratio again usually
-            }
-
-            animate() {
-                this.animationFrameId = requestAnimationFrame(this.animate); // Request next frame first
-                if (!this.renderer || !this.scene || !this.camera) return; // Check if disposed
-
-                this.controls.update(); // Update orbit controls (required if enableDamping is true)
-                this.renderer.render(this.scene, this.camera);
-            }
-
-             // Clean up resources when the viewer is no longer needed
-             dispose() {
-                 console.log("Disposing Trophy Viewer");
-                 cancelAnimationFrame(this.animationFrameId); // Stop animation loop
-                 this.resizeObserver.disconnect(); // Stop observing resize
-
-                 if (this.controls) {
-                     this.controls.dispose();
-                     this.controls = null;
-                 }
-
-                 this.clearScene(); // Clean up model, ground plane etc.
-
-                  // Dispose lights, scene, renderer
-                 if (this.scene) {
-                    // Remove all objects and dispose materials/geometries if needed
-                    while(this.scene.children.length > 0){
-                        const object = this.scene.children[0];
-                        // Basic cleanup - more thorough needed for complex scenes
-                        if(object.geometry) object.geometry.dispose();
-                        if(object.material) {
-                            if (Array.isArray(object.material)) {
-                                object.material.forEach(m => m.dispose());
-                            } else {
-                                object.material.dispose();
-                            }
-                        }
-                        this.scene.remove(object);
-                    }
-                     this.scene = null;
-                 }
-
-                 if (this.renderer) {
-                    this.renderer.dispose(); // Release WebGL context
-                    // Remove the canvas from DOM
-                     if (this.renderer.domElement && this.renderer.domElement.parentNode) {
-                        this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
-                     }
-                     this.renderer = null;
-                 }
-
-                 this.camera = null;
-                 this.container = null; // Remove reference to container
-                 this.removeStatusElements(); // Clean up loading/error messages
-                 currentViewer = null; // Clear global reference
-             }
-        }
-
-        // --- Utility Functions ---
-
-        function showLoading() {
-            loadingSpinner.style.display = 'block';
-            navigationGrid.style.display = 'none'; // Hide grid while loading initial data
-        }
-
-        function hideLoading() {
-            loadingSpinner.style.display = 'none';
-             navigationGrid.style.display = 'grid'; // Show grid again
-        }
-
-        function showError(message) {
-            errorMessageContainer.textContent = message;
-            errorMessageContainer.style.display = 'block';
-            navigationGrid.innerHTML = ''; // Clear grid on error
-        }
-
-        function clearError() {
-            errorMessageContainer.textContent = '';
-            errorMessageContainer.style.display = 'none';
-        }
-
-        function openModal() {
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-
-        function closeModal() {
-             modal.style.display = 'none';
-             document.body.style.overflow = ''; // Restore background scrolling
-             // Clean up the Three.js viewer when modal closes
-             if (currentViewer && currentViewer.dispose) {
-                 currentViewer.dispose();
-                 currentViewer = null;
-             }
-             modalBody.innerHTML = ''; // Clear modal content
-        }
-
-        function updateBreadcrumb() {
-            breadcrumbContainer.innerHTML = ''; // Clear existing
-            navigationHistory.forEach((item, index) => {
-                const element = document.createElement(index === navigationHistory.length - 1 ? 'span' : 'a');
-                 element.style.cursor = (index === navigationHistory.length - 1) ? 'default' : 'pointer';
-
-
-                switch (item.type) {
-                    case 'home':
-                        element.textContent = 'Home';
-                         if (index < navigationHistory.length - 1) {
-                           element.onclick = () => renderHomeView();
-                         }
-                        break;
-                    case 'school':
-                        element.textContent = item.data?.name || 'School';
-                         if (index < navigationHistory.length - 1) {
-                             // Find the school object again if needed, or ensure it's stored correctly
-                             const school = allSchoolsData.find(s => s.name === item.data?.name);
-                             if (school) {
-                                element.onclick = () => {
-                                    // Navigate back: slice history and re-render
-                                    navigationHistory = navigationHistory.slice(0, index + 1);
-                                    renderSchoolView(school);
-                                };
-                             }
-                         }
-                        break;
-                    case 'sport':
-                        element.textContent = item.data?.sportName || 'Sport';
-                         if (index < navigationHistory.length - 1) {
-                            element.onclick = () => {
-                                navigationHistory = navigationHistory.slice(0, index + 1);
-                                renderSportView(item.data.schoolName, item.data.sportName);
-                            };
-                         }
-                        break;
-                }
-
-                breadcrumbContainer.appendChild(element);
-
-                if (index < navigationHistory.length - 1) {
-                    const separator = document.createElement('span');
-                    separator.innerHTML = ' / '; // Add space around separator
-                    breadcrumbContainer.appendChild(separator);
-                }
-            });
-        }
-
-
-        // --- Event Listeners ---
-        closeModalButton.addEventListener('click', closeModal);
-
-        // Close modal when clicking outside the modal content
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Close modal on 'Escape' key press
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.style.display === 'block') {
-                closeModal();
-            }
-        });
-
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', loadAllData);
-
-    </script>
+      });
+      breadcrumb.innerHTML = path.join(' <span>/</span> ');
+    }
+
+    // Close modal when clicking the close button or outside the modal.
+    document.querySelector('.close-modal').addEventListener('click', () => {
+      document.getElementById('detailModal').style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+      const modal = document.getElementById('detailModal');
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    // Start the application when the DOM is ready.
+    document.addEventListener('DOMContentLoaded', loadAllData);
+  </script>
 </body>
 </html>
